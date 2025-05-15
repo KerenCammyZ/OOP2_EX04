@@ -12,8 +12,7 @@ public:
 	void run();
 	void loadLevel(const std::string& fileName);
 	void update();
-	void render();
-	void handleInput();
+	void draw();
 
 private:
 	bool m_running{ false };
