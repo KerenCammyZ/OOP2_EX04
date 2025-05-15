@@ -1,17 +1,19 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <fstream>
 #include <string>
+#include <iostream>
 
 class Controller
 {
 public:
-	Controller() = default;
+	Controller();
 	~Controller() = default;
 	void run();
 	void loadLevel(const std::string& fileName);
 	void update();
 	void render();
-	void handleEvents();
+	void handleInput();
 
 private:
 	bool m_running{ false };
