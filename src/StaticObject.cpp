@@ -1,7 +1,5 @@
 #include "StaticObject.h"
 
-StaticObject::StaticObject()
-	: GameObject(std::make_unique<sf::RectangleShape>(sf::Vector2f(m_tileSize, m_tileSize)))
-{
 
-}
+StaticObject::StaticObject() :
+	GameObject(std::make_unique<sf::RectangleShape>(sf::Vector2f(m_tileSize, m_tileSize))){}
