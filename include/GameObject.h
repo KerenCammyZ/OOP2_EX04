@@ -5,6 +5,7 @@ class GameObject
 public:
 	//constructor and destructor
 	GameObject();
+	explicit GameObject(std::unique_ptr<sf::Shape> shape);
 	virtual ~GameObject() {};
 	//copy constructor and assignment operator (maybe not needed)
 
@@ -33,9 +34,10 @@ public:
 	
 protected:
 	int m_tileSize = 50; //can change later
-	sf::RectangleShape m_shape;
-	sf::Vector2f m_position;
 	sf::Vector2f m_oldPosition;
 	sf::Vector2f m_startPosition;
-
+	sf::Vector2f m_position;
+	
+	//sf::RectangleShape m_shape;
+	std::unique_ptr<sf::Shape> m_shape;
 };
