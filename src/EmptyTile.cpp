@@ -2,5 +2,5 @@
 
 EmptyTile::EmptyTile()
 {
-	setColor(sf::Color::Magenta);
+	setColor(sf::Color::Transparent);
 }

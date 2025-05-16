@@ -1,34 +1,43 @@
 #include "Board.h"
-const int TILE_SIZE = 32; // Assuming each tile is 32x32 pixels
+#include "FullTile.h" 
+#include "EmptyTile.h" 
+#include <SFML/Graphics.hpp> 
+#include <iostream>     
 
-Board::Board(int rows, int cols): m_rows(rows), m_cols(cols)
-{
-	for (int i = 0; i < rows; ++i) 
-	{
-		for (int j = 0; j < cols; ++j) 
-		{
-			// If on the edge (top, bottom, left, or right), use FullTile
-			if (i == 0 || i == rows - 1 || j == 0 || j == cols - 1)
-			{
-				m_board[{i, j}] = std::make_unique<FullTile>();
-			}
-			else
-			{
-				m_board[{i, j}] = std::make_unique<EmptyTile>();
-			}
-		}
-	}
+const int TILE_SIZE = 20;
+
+Board::Board(int rows, int cols) : m_rows(rows), m_cols(cols) {
+   
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            // Determine if the current tile should be a border tile
+            bool is_border_tile = (i == 0 || i == (rows - 1) || j == 0 || j == (cols - 1));
+
+            if (is_border_tile) {
+                m_board[{i, j}] = std::make_unique<FullTile>();
+            }
+            else {
+                m_board[{i, j}] = std::make_unique<EmptyTile>();
+            }
+        }
+    }
 }
 
-void Board::draw(sf::RenderWindow& window) const
-{
-	for (const auto& [pos, tilePtr] : m_board) 
-	{
-		if (tilePtr)
-		{
-			// Fix: Use sf::Vector2f to set position
-			tilePtr->setPosition(sf::Vector2f(pos.first * TILE_SIZE, pos.second * TILE_SIZE));
-			tilePtr->draw(window);
-		}
-	}
+void Board::draw(sf::RenderWindow& window) const {
+    int drawn_tile_count = 0;
+    for (const auto& pair : m_board) {
+        const std::pair<int, int>& pos = pair.first;
+        const std::unique_ptr<Tile>& tilePtr = pair.second;
+
+        if (tilePtr) {
+            tilePtr->setPosition(sf::Vector2f(static_cast<float>(pos.second * TILE_SIZE),
+                static_cast<float>(pos.first * TILE_SIZE)));
+            tilePtr->draw(window);
+            drawn_tile_count++;
+        }
+        else {
+            // This case should ideally not happen if make_unique succeeds for all.
+            // std::cout << "Warning: Null tilePtr at pos (" << pos.first << "," << pos.second << ")" << std::endl;
+        }
+    }
 }

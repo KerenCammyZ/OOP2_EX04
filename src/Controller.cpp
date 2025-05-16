@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 
-Controller::Controller() : m_window(sf::VideoMode(1600, 1200), "Xonix"), m_running(false){}
+Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false){}
 
 void Controller::run()
 {

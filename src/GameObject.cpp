@@ -1,52 +1,63 @@
 #include "GameObject.h"
+#include <iostream> 
 
-//constructors and destructors  
-GameObject::GameObject()  
-: m_shape(std::make_unique<sf::RectangleShape>(sf::Vector2f(50.f, 50.f))) // Default to a 50x50 rectangle  
-{  
-   m_shape->setFillColor(sf::Color::White); // Default color 
-   m_position = { 0.f, 0.f }; // Default position  
-   m_startPosition = m_position;  
-   m_oldPosition = m_position;  
-   m_shape->setPosition(m_position);
+GameObject::GameObject()
+    : m_shape(std::make_unique<sf::RectangleShape>(sf::Vector2f(20.f, 20.f)))
+{
+    m_shape->setFillColor(sf::Color::White);
+    m_position = { 0.f, 0.f };
+    m_startPosition = m_position;
+    m_oldPosition = m_position;
+    m_shape->setPosition(m_position);
+    // m_tileSize (default member initialized to 20) is not used to size this default shape.
 }
 
 GameObject::GameObject(std::unique_ptr<sf::Shape> shape)
-: m_shape(std::move(shape))
-{
-
-}
+    : m_shape(std::move(shape)) {}
 
 GameObject::GameObject(const sf::Vector2f& position, std::unique_ptr<sf::Shape> shape)
+    : m_shape(std::move(shape)),
+    m_position(position),
+    m_startPosition(position),
+    m_oldPosition(position)
 {
-    m_shape = std::move(shape); // Move the shape into the object
-	m_shape->setPosition(position); // Set the position of the shape
-    m_position = position; // Set the position
-    m_startPosition = position; // Set the start position
-    m_oldPosition = position; // Set the old position
-	m_tileSize = 50.f; // Default tile size, adjust as needed
+    if (m_shape) {
+        m_shape->setPosition(m_position);
+
+    }
 }
+
 
 GameObject::GameObject(const GameObject& other)
+    : m_shape(other.m_shape ? std::make_unique<sf::RectangleShape>(*(dynamic_cast<sf::RectangleShape*>(other.m_shape.get()))) : nullptr),
+    m_position(other.m_position),
+    m_startPosition(other.m_startPosition),
+    m_oldPosition(other.m_oldPosition),
+    m_tileSize(other.m_tileSize) 
 {
-	m_shape = std::make_unique<sf::RectangleShape>(*(dynamic_cast<sf::RectangleShape*>(other.m_shape.get()))); // Copy the shape
+    if (m_shape) {
+        m_shape->setPosition(m_position); 
+    }
 }
 
+// Assignment operator
 GameObject GameObject::operator=(const GameObject& other)
 {
     if (this == &other)
         return *this;
 
-    // Copy shape (assumes RectangleShape, adjust if you support more types)
-    if (other.m_shape)
-    {
+    // Deep copy the shape
+    if (other.m_shape) {
+        // Assuming RectangleShape; more robust code would check other.m_shape's actual type
         m_shape = std::make_unique<sf::RectangleShape>(
             *(dynamic_cast<sf::RectangleShape*>(other.m_shape.get()))
         );
+        if (m_shape) { // if successful
+            m_shape->setPosition(other.m_position); // set its position
+        }
     }
-    else
-    {
-        m_shape.reset();
+    else {
+        m_shape.reset(); // If other has no shape, this one shouldn't either
     }
 
     m_position = other.m_position;
@@ -55,56 +66,75 @@ GameObject GameObject::operator=(const GameObject& other)
     m_tileSize = other.m_tileSize;
 
     return *this;
-
 }
 
-//draw object on screen
+// Draw object on screen
 void GameObject::draw(sf::RenderWindow& window)
 {
-window.draw(*m_shape);
+    if (m_shape) { // Only draw if the shape exists
+        window.draw(*m_shape);
+    }
 }
 
+// Getters
 sf::Vector2f GameObject::getLocation() const
 {
-return m_position;
+    return m_position; 
 }
 
 sf::FloatRect GameObject::getGlobalBounds() const
 {
-return m_shape->getGlobalBounds();
+    if (m_shape) {
+        return m_shape->getGlobalBounds();
+    }
+    return sf::FloatRect(); // Return empty rect if no shape
 }
 
 sf::Vector2f GameObject::getStartPosition() const
 {
-return m_startPosition;
+    return m_startPosition;
 }
 
 sf::Vector2f GameObject::getOldPosition() const
 {
-return m_oldPosition;
+    return m_oldPosition;
 }
 
 sf::Shape& GameObject::getShape() const
-{
-	 return *m_shape; 
+{ 
+    if (!m_shape) {
+        throw std::runtime_error("Attempted to getShape() on a GameObject with no shape.");
+    }
+    return *m_shape;
 }
 
+// Setters
 void GameObject::setColor(const sf::Color& color)
 {
-m_shape->setFillColor(color);
+    if (m_shape) {
+        m_shape->setFillColor(color);
+    }
 }
 
 void GameObject::setPosition(sf::Vector2f position)
 {
-m_shape->setPosition(position);
+   
+    m_position = position; 
+    if (m_shape) {
+        m_shape->setPosition(position);
+    }
 }
 
 void GameObject::setStartPosition()
 {
-//m_shape.setPosition(50.f, 50.f);
+    // m_shape.setPosition(50.f, 50.f); // Example of what it might do
 }
 
-void GameObject::setDrawSettings(int posRow, int posCol)
+// Collision checking (basic AABB)
+bool GameObject::checkCollision(GameObject& unknownObj) const
 {
-
+    if (m_shape && unknownObj.m_shape) {
+        return m_shape->getGlobalBounds().intersects(unknownObj.getGlobalBounds());
+    }
+    return false; // No collision if one or both objects lack a shape
 }

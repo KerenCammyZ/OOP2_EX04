@@ -19,6 +19,6 @@ public:
 
 private:
 	bool m_running{ false };
-	sf::RenderWindow m_window{ sf::VideoMode(1600,1200), "Xonix" };
+	sf::RenderWindow m_window{ sf::VideoMode(1000,1200), "Xonix" };
 	Board m_board{ 50,50 };
 };

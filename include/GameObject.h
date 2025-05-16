@@ -26,7 +26,6 @@ public:
 	void setColor(const sf::Color& color);
 	void setPosition(sf::Vector2f position);
 	void setStartPosition();
-	void setDrawSettings(int posRow, int posCol);
 
 	//handle collision with other game objects
 	bool checkCollision(GameObject& unknownObj) const;
@@ -36,7 +35,7 @@ public:
 	//virtual void handleCollision(Player& player) {};
 	
 protected:
-	int m_tileSize = 32; //can change later
+	int m_tileSize = 20; //can change later
 	sf::Vector2f m_oldPosition;
 	sf::Vector2f m_startPosition;
 	sf::Vector2f m_position;
