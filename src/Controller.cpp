@@ -2,26 +2,26 @@
 #include "GameObject.h"
 
 
-Controller::Controller() : m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false){}
+Controller::Controller() : m_window(new sf::RenderWindow(sf::VideoMode(800, 600), "Xonix")), m_running(false){}
 
 void Controller::run()
 {
 	// Initialize the controller
 	//loadLevel("level1.txt");
 	// Main loop
-	while (m_window.isOpen())
+	while (m_window->isOpen())
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
-		while (m_window.pollEvent(event))
+		while (m_window->pollEvent(event))
 		{
 			// "close requested" event: we close the window
 			if (event.type == sf::Event::Closed)
-				m_window.close();
+				m_window->close();
 		}
 
 		// clear window with black color
-		m_window.clear(sf::Color::Black);
+		m_window->clear(sf::Color::Black);
 
 		// update the game state
 		//update();
@@ -31,10 +31,10 @@ void Controller::run()
 		GameObject a;
 		a.setPosition(sf::Vector2f(50,50));
 		a.setColor(sf::Color::Green);
-		a.draw(&m_window);
+		a.draw(*m_window);
 
 		// end the current frame
-		m_window.display();
+		m_window->display();
 	}
 }
 
