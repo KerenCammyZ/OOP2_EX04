@@ -31,8 +31,12 @@ void Controller::run()
 		GameObject a;
 		a.setPosition(sf::Vector2f(50,50));
 		a.setColor(sf::Color::Green);
-		a.draw(*m_window);
-
+		//a.draw(m_window);
+		m_window->draw(a.getShape());
+		sf::RectangleShape rect(sf::Vector2f(100, 100));
+		rect.setFillColor(sf::Color::Green);
+		rect.setPosition(100, 50);
+		m_window->draw(rect);
 		// end the current frame
 		m_window->display();
 	}
