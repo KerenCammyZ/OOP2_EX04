@@ -6,9 +6,11 @@ public:
 	//constructor and destructor
 	GameObject();
 	explicit GameObject(std::unique_ptr<sf::Shape> shape);
+	GameObject(const sf::Vector2f& position, std::unique_ptr<sf::Shape> shape);
 	virtual ~GameObject() {};
-	//copy constructor and assignment operator (maybe not needed)
-
+	//copy constructor and assignment operator 
+	GameObject(const GameObject& other);
+	GameObject operator=(const GameObject& other);
 	//draw object on the screen
 	void draw(sf::RenderWindow& window);
 	//virtual void update(float deltaTime) = 0;
@@ -34,7 +36,7 @@ public:
 	//virtual void handleCollision(Player& player) {};
 	
 protected:
-	int m_tileSize = 50; //can change later
+	int m_tileSize = 32; //can change later
 	sf::Vector2f m_oldPosition;
 	sf::Vector2f m_startPosition;
 	sf::Vector2f m_position;

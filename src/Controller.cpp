@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 
-Controller::Controller() : m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false){}
+Controller::Controller() : m_window(sf::VideoMode(1600, 1200), "Xonix"), m_running(false){}
 
 void Controller::run()
 {
@@ -28,10 +28,11 @@ void Controller::run()
 
 		// draw everything
 		//draw();
-		GameObject a;
-		a.setPosition(sf::Vector2f(50,50));
-		a.setColor(sf::Color::Green);
-		a.draw(m_window);
+		/*GameObject a;
+		a.draw(m_window);*/
+		
+		m_board.draw(m_window);
+
 
 		// end the current frame
 		m_window.display();
