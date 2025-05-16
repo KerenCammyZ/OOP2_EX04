@@ -42,6 +42,11 @@ sf::Vector2f GameObject::getOldPosition() const
 return m_oldPosition;
 }
 
+sf::Shape& GameObject::getShape() const
+{
+	 return *m_shape; 
+}
+
 void GameObject::setColor(const sf::Color& color)
 {
 m_shape->setFillColor(color);

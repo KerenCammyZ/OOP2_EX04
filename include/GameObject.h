@@ -19,6 +19,7 @@ public:
 	sf::FloatRect getGlobalBounds() const;
 	sf::Vector2f getStartPosition() const;
 	sf::Vector2f getOldPosition() const;
+	sf::Shape& getShape() const;
 
 	void setColor(const sf::Color& color);
 	void setPosition(sf::Vector2f position);
