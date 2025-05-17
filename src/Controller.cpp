@@ -1,17 +1,21 @@
 #include "Controller.h"
 #include "GameObject.h"
 
+int rows = 40;
+int cols = 40;
+int tileSize = 10;
 
-Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false){}
+Controller::Controller()  
+: m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false), m_board(rows, cols, tileSize) // Initialize m_board with valid arguments  
+{  
+
+}
 
 void Controller::run()
 {
-	// Initialize the controller
-	//loadLevel("level1.txt");
-	// Main loop
 	while (m_window.isOpen())
 	{
-		// check all the window's events that were triggered since the last iteration of the loop
+		// handle input
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
@@ -24,13 +28,14 @@ void Controller::run()
 		m_window.clear(sf::Color::Black);
 
 		// update the game state
-		//update();
+		// update();
+		Player player;
+		player.setPosition(sf::Vector2f(5 * tileSize, 10 * tileSize));
 
 		// draw everything
-		//draw();
-		/*GameObject a;
-		a.draw(m_window);*/
+		// draw();
 		m_board.draw(m_window);
+		player.draw(m_window);
 
 		// end the current frame
 		m_window.display();

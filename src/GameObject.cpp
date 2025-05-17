@@ -23,7 +23,6 @@ GameObject::GameObject(const sf::Vector2f& position, std::unique_ptr<sf::Shape> 
 {
     if (m_shape) {
         m_shape->setPosition(m_position);
-
     }
 }
 

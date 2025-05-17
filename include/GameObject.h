@@ -35,7 +35,8 @@ public:
 	//virtual void handleCollision(Player& player) {};
 	
 protected:
-	int m_tileSize = 20; //can change later
+	int m_tileSize = 10; //can change later
+
 	sf::Vector2f m_oldPosition;
 	sf::Vector2f m_startPosition;
 	sf::Vector2f m_position;
