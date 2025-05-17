@@ -30,9 +30,7 @@ void Controller::run()
 		//draw();
 		/*GameObject a;
 		a.draw(m_window);*/
-		
 		m_board.draw(m_window);
-
 
 		// end the current frame
 		m_window.display();

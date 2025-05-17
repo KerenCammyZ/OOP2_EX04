@@ -24,7 +24,6 @@ Board::Board(int rows, int cols) : m_rows(rows), m_cols(cols) {
 }
 
 void Board::draw(sf::RenderWindow& window) const {
-    int drawn_tile_count = 0;
     for (const auto& pair : m_board) {
         const std::pair<int, int>& pos = pair.first;
         const std::unique_ptr<Tile>& tilePtr = pair.second;
@@ -33,7 +32,6 @@ void Board::draw(sf::RenderWindow& window) const {
             tilePtr->setPosition(sf::Vector2f(static_cast<float>(pos.second * TILE_SIZE),
                 static_cast<float>(pos.first * TILE_SIZE)));
             tilePtr->draw(window);
-            drawn_tile_count++;
         }
         else {
             // This case should ideally not happen if make_unique succeeds for all.
