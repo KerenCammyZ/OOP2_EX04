@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-
 #include "Board.h"
 
 class Controller

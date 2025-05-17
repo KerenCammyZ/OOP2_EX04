@@ -1,12 +1,12 @@
 #include "Controller.h"
 #include "GameObject.h"
 
-int rows = 40;
-int cols = 40;
-int tileSize = 10;
+int rows = 50;
+int cols = 80;
+int tileSize = 10; // NOTE: exists independently in class GameObject.h, must have same size.
 
 Controller::Controller()  
-: m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false), m_board(rows, cols, tileSize) // Initialize m_board with valid arguments  
+: m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false), m_board(rows, cols, tileSize)
 {  
 
 }
@@ -30,12 +30,18 @@ void Controller::run()
 		// update the game state
 		// update();
 		Player player;
-		player.setPosition(sf::Vector2f(5 * tileSize, 10 * tileSize));
+		Enemy redEnemy1;
+		Enemy redEnemy2;
+		player.setPosition(sf::Vector2f(cols/2*tileSize, 0));
+		redEnemy1.setPosition(sf::Vector2f(5 * tileSize, (rows-4)*tileSize));
+		redEnemy2.setPosition(sf::Vector2f(2 * tileSize, 3 * tileSize));
 
 		// draw everything
 		// draw();
 		m_board.draw(m_window);
 		player.draw(m_window);
+		redEnemy1.draw(m_window);
+		redEnemy2.draw(m_window);
 
 		// end the current frame
 		m_window.display();

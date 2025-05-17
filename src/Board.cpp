@@ -27,7 +27,6 @@ Board::Board(int rows, int cols, int tileSize)
 void Board::draw(sf::RenderWindow& window) const
 {
     int width_offset = (window.getSize().x - (m_cols * m_tileSize)) / 2;
-    int height_offset = (window.getSize().y - (m_rows * m_tileSize)) / 2;
     for (const auto& pair : m_board) {
         const std::pair<int, int>& pos = pair.first;
         const std::unique_ptr<Tile>& tilePtr = pair.second;
@@ -35,7 +34,7 @@ void Board::draw(sf::RenderWindow& window) const
         if (tilePtr) {
             tilePtr->setPosition(sf::Vector2f(
                 static_cast<float>(width_offset + pos.second * m_tileSize),
-                static_cast<float>(height_offset + pos.first * m_tileSize)
+                static_cast<float>(pos.first * m_tileSize)
             ));
             tilePtr->draw(window);
         }
