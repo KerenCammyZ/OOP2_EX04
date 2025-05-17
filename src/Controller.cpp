@@ -30,18 +30,12 @@ void Controller::run()
 		// update the game state
 		// update();
 		Player player;
-		Enemy redEnemy1;
-		Enemy redEnemy2;
 		player.setPosition(sf::Vector2f(cols/2*tileSize, 0));
-		redEnemy1.setPosition(sf::Vector2f(5 * tileSize, (rows-4)*tileSize));
-		redEnemy2.setPosition(sf::Vector2f(2 * tileSize, 3 * tileSize));
 
 		// draw everything
 		// draw();
 		m_board.draw(m_window);
 		player.draw(m_window);
-		redEnemy1.draw(m_window);
-		redEnemy2.draw(m_window);
 
 		// end the current frame
 		m_window.display();
