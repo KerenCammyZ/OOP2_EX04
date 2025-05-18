@@ -4,7 +4,10 @@
 
 
 Tile::Tile() :
-    GameObject(std::make_unique<sf::RectangleShape>(sf::Vector2f(20.f, 20.f))){}
+    GameObject(std::make_unique<sf::RectangleShape>(sf::Vector2f(20.f, 20.f)))
+{
+
+}
 
 
 Tile Tile::operator=(const Tile& other)
