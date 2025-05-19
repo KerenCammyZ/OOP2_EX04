@@ -5,7 +5,7 @@
 
 Tile::Tile()
 {
-    m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(m_tileSize, m_tileSize));
+    m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(tileSize, tileSize));
 }
 
 Tile Tile::operator=(const Tile& other)

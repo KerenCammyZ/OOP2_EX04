@@ -19,7 +19,7 @@ public:
 	void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);
 
 private:
-	sf::RenderWindow m_window{ sf::VideoMode(1000,1200), "Xonix" };
+	sf::RenderWindow m_window; // { sf::VideoMode(1000, 1200), "Xonix" };
 	Board m_board; //TODO: change to dynamic size
 	Player m_player;
 

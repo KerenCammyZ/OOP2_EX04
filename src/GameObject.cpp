@@ -2,14 +2,13 @@
 #include <iostream> 
 
 GameObject::GameObject()
-    : m_shape(std::make_unique<sf::RectangleShape>(sf::Vector2f(m_tileSize, m_tileSize)))
+    : m_shape(std::make_unique<sf::RectangleShape>(sf::Vector2f(tileSize, tileSize)))
 {
     m_shape->setFillColor(sf::Color::White);
     m_position = { 0.f, 0.f };
     m_startPosition = m_position;
     m_oldPosition = m_position;
     m_shape->setPosition(m_position);
-    // m_tileSize (default member initialized to 20) is not used to size this default shape.
 }
 
 GameObject::GameObject(std::unique_ptr<sf::Shape> shape)
@@ -31,8 +30,7 @@ GameObject::GameObject(const GameObject& other)
     : m_shape(other.m_shape ? std::make_unique<sf::RectangleShape>(*(dynamic_cast<sf::RectangleShape*>(other.m_shape.get()))) : nullptr),
     m_position(other.m_position),
     m_startPosition(other.m_startPosition),
-    m_oldPosition(other.m_oldPosition),
-    m_tileSize(other.m_tileSize) 
+    m_oldPosition(other.m_oldPosition)
 {
     if (m_shape) {
         m_shape->setPosition(m_position); 
@@ -62,7 +60,6 @@ GameObject GameObject::operator=(const GameObject& other)
     m_position = other.m_position;
     m_startPosition = other.m_startPosition;
     m_oldPosition = other.m_oldPosition;
-    m_tileSize = other.m_tileSize;
 
     return *this;
 }
