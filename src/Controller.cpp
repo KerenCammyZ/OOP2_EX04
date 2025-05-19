@@ -1,11 +1,11 @@
 #include "Controller.h"
 #include "GameObject.h"
+#include "GlobalSizes.h"
 
 int rows = 50;
 int cols = 80;
-int tileSize = 10; // NOTE: exists independently in class GameObject.h, must have same size.
 
-Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false), m_board{50,50, tileSize}
+Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false), m_board{50,50}
 {
 	m_player.setPosition(sf::Vector2f(100, 100));
 }
@@ -30,11 +30,11 @@ void Controller::run()
 
 		// update the game state
 		//update();
-
+		handleKeyPressed(event.key.code, m_deltaTime);
 		// draw everything
 		// draw();
 		m_board.draw(m_window);
-
+		m_player.draw(m_window);
 		// end the current frame
 		m_window.display();
 	}

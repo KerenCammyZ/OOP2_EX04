@@ -19,7 +19,7 @@ struct PairHash {
 class Board
 {
 public:
-    Board(int rows, int cols, int tileSize);
+    Board(int rows, int cols);
     Board(const Board&) = default;
     void draw(sf::RenderWindow& window) const;
 
@@ -27,5 +27,4 @@ private:
     std::unordered_map<std::pair<int, int>, std::unique_ptr<Tile>, PairHash> m_board;
     int m_rows;
     int m_cols;
-    int m_tileSize;
 };

@@ -35,7 +35,7 @@ public:
 	//virtual void handleCollision(Player& player) {};
 	
 protected:
-	int m_tileSize = 10; // can change later
+	int m_tileSize = 20; // can change later
 						 // NOTE: exists independently in class Board.h, both must have same size.
 
 	sf::Vector2f m_oldPosition;
