@@ -5,7 +5,7 @@ int rows = 50;
 int cols = 80;
 int tileSize = 10; // NOTE: exists independently in class GameObject.h, must have same size.
 
-Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false)
+Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false), m_board{50,50, tileSize}
 {
 	m_player.setPosition(sf::Vector2f(100, 100));
 }
