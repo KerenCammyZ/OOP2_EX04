@@ -38,6 +38,6 @@ void Player::setDirection(sf::Keyboard::Key keyCode)
 
 void Player::move(sf::Time deltaTime)
 {
-	m_shape->move(m_direction * m_speed *deltaTime.asSeconds());
+	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());
 	setPosition(m_shape->getPosition());
 }
