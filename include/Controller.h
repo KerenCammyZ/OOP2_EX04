@@ -20,7 +20,7 @@ public:
 
 private:
 	sf::RenderWindow m_window{ sf::VideoMode(1000,1200), "Xonix" };
-	Board m_board{ 50,50 }; //TODO: change to dynamic size
+	Board m_board; //TODO: change to dynamic size
 	Player m_player;
 
 	bool m_running{ false };

@@ -10,7 +10,6 @@ Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_runni
 	m_player.setPosition(sf::Vector2f(100, 100));
 }
 
-}
 
 void Controller::run()
 {
@@ -18,16 +17,16 @@ void Controller::run()
 	{
 		// handle input
 		sf::Event event;
-		while (m_window->pollEvent(event))
+		while (m_window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				m_window->close();
+				m_window.close();
 		}
 
 		m_deltaTime = m_clock.restart();
 
 		// clear window with black color
-		m_window->clear(sf::Color::Black);
+		m_window.clear(sf::Color::Black);
 
 		// update the game state
 		//update();
@@ -37,7 +36,7 @@ void Controller::run()
 		m_board.draw(m_window);
 
 		// end the current frame
-		m_window->display();
+		m_window.display();
 	}
 }
 
