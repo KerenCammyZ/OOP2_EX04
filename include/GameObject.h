@@ -5,9 +5,12 @@ class GameObject
 public:
 	//constructor and destructor
 	GameObject();
+	explicit GameObject(std::unique_ptr<sf::Shape> shape);
+	GameObject(const sf::Vector2f& position, std::unique_ptr<sf::Shape> shape);
 	virtual ~GameObject() {};
-	//copy constructor and assignment operator (maybe not needed)
-
+	//copy constructor and assignment operator 
+	GameObject(const GameObject& other);
+	GameObject operator=(const GameObject& other);
 	//draw object on the screen
 	void draw(sf::RenderWindow& window);
 	//virtual void update(float deltaTime) = 0;
@@ -18,12 +21,11 @@ public:
 	sf::FloatRect getGlobalBounds() const;
 	sf::Vector2f getStartPosition() const;
 	sf::Vector2f getOldPosition() const;
-	sf::RectangleShape getShape() const;
+	sf::Shape& getShape() const;
 
 	void setColor(const sf::Color& color);
 	void setPosition(sf::Vector2f position);
 	void setStartPosition();
-	void setDrawSettings(int posRow, int posCol);
 
 	//handle collision with other game objects
 	bool checkCollision(GameObject& unknownObj) const;
@@ -33,10 +35,13 @@ public:
 	//virtual void handleCollision(Player& player) {};
 	
 protected:
-	int m_tileSize = 50; //can change later
-	sf::RectangleShape m_shape;
-	sf::Vector2f m_position;
+	int m_tileSize = 10; // can change later
+						 // NOTE: exists independently in class Board.h, both must have same size.
+
 	sf::Vector2f m_oldPosition;
 	sf::Vector2f m_startPosition;
-
+	sf::Vector2f m_position;
+	
+	//sf::RectangleShape m_shape;
+	std::unique_ptr<sf::Shape> m_shape;
 };

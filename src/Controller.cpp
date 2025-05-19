@@ -1,17 +1,21 @@
 #include "Controller.h"
 #include "GameObject.h"
 
+int rows = 50;
+int cols = 80;
+int tileSize = 10; // NOTE: exists independently in class GameObject.h, must have same size.
 
-Controller::Controller() : m_window(new sf::RenderWindow(sf::VideoMode(800, 600), "Xonix")), m_running(false){}
+Controller::Controller()  
+: m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false), m_board(rows, cols, tileSize)
+{  
+
+}
 
 void Controller::run()
 {
-	// Initialize the controller
-	//loadLevel("level1.txt");
-	// Main loop
-	while (m_window->isOpen())
+	while (m_window.isOpen())
 	{
-		// check all the window's events that were triggered since the last iteration of the loop
+		// handle input
 		sf::Event event;
 		while (m_window->pollEvent(event))
 		{
@@ -24,19 +28,15 @@ void Controller::run()
 		m_window->clear(sf::Color::Black);
 
 		// update the game state
-		//update();
+		// update();
+		Player player;
+		player.setPosition(sf::Vector2f(cols/2*tileSize, 0));
 
 		// draw everything
-		//draw();
-		GameObject a;
-		a.setPosition(sf::Vector2f(50,50));
-		a.setColor(sf::Color::Green);
-		//a.draw(m_window);
-		m_window->draw(a.getShape());
-		sf::RectangleShape rect(sf::Vector2f(100, 100));
-		rect.setFillColor(sf::Color::Green);
-		rect.setPosition(100, 50);
-		m_window->draw(rect);
+		// draw();
+		m_board.draw(m_window);
+		player.draw(m_window);
+
 		// end the current frame
 		m_window->display();
 	}

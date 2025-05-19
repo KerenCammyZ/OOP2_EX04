@@ -1,8 +1,10 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <fstream>
 #include <string>
 #include <iostream>
+#include "Board.h"
 
 class Controller
 {
@@ -16,5 +18,6 @@ public:
 
 private:
 	bool m_running{ false };
-	sf::RenderWindow* m_window;
+	sf::RenderWindow m_window;// { sf::VideoMode(1000, 1200), "Xonix" };
+	Board m_board; //Board m_board { 50, 50 };
 };
