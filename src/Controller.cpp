@@ -5,9 +5,10 @@ int rows = 50;
 int cols = 80;
 int tileSize = 10; // NOTE: exists independently in class GameObject.h, must have same size.
 
-Controller::Controller()  
-: m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false), m_board(rows, cols, tileSize)
-{  
+Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false)
+{
+	m_player.setPosition(sf::Vector2f(100, 100));
+}
 
 }
 
@@ -19,23 +20,21 @@ void Controller::run()
 		sf::Event event;
 		while (m_window->pollEvent(event))
 		{
-			// "close requested" event: we close the window
 			if (event.type == sf::Event::Closed)
 				m_window->close();
 		}
+
+		m_deltaTime = m_clock.restart();
 
 		// clear window with black color
 		m_window->clear(sf::Color::Black);
 
 		// update the game state
-		// update();
-		Player player;
-		player.setPosition(sf::Vector2f(cols/2*tileSize, 0));
+		//update();
 
 		// draw everything
 		// draw();
 		m_board.draw(m_window);
-		player.draw(m_window);
 
 		// end the current frame
 		m_window->display();
@@ -62,4 +61,11 @@ void Controller::update()
 
 void Controller::draw()
 {
+
+}
+
+void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
+{
+	m_player.setDirection(keyCode);
+	m_player.move(deltaTime);
 }

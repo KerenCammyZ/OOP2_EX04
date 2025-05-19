@@ -38,7 +38,9 @@ void Board::draw(sf::RenderWindow& window) const
             ));
             tilePtr->draw(window);
         }
-        else {
+        else 
+        {
+			throw std::runtime_error("Null tile pointer encountered while drawing the board.");
             // This case should ideally not happen if make_unique succeeds for all.
             // std::cout << "Warning: Null tilePtr at pos (" << pos.first << "," << pos.second << ")" << std::endl;
         }
