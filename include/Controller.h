@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Board.h"
 #include "Player.h"
+#include "LevelManager.h"
 
 class Controller
 {

@@ -5,9 +5,23 @@
 int rows = 50;
 int cols = 80;
 
-Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false), m_board{40,40}
+Controller::Controller() 
+	: m_window(sf::VideoMode(800, 600), "Xonix"), m_running(false), m_board{rows,cols}
 {
+	// Load the level manager
+	LevelManager levelManager("levels.txt");
+	if (!levelManager.initialize())
+	{
+		throw std::runtime_error("Failed to initialize level manager");
+	}
+
+	sf::Vector2u windowSize = levelManager.getWindowSize();
+
+	// Update the window size based on the data read from the file
+    m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
+
 	m_player.setPosition(sf::Vector2f(100, 100));
+	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 }
 
 
