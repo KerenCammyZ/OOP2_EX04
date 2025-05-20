@@ -2,6 +2,7 @@
 #include "Tile.h"
 #include "FullTile.h"
 #include "EmptyTile.h"
+#include "Enemy.h"
 #include <unordered_map>
 #include <functional>
 #include <string>
@@ -21,12 +22,12 @@ class Board
 public:
     Board(int rows, int cols);
     Board(const Board&) = default;
-    void initializeBoard();
-	void reset(sf::RenderWindow& window);
+    void initializeBoard(int numOfEnemies);
     void draw(sf::RenderWindow& window) const;
 
 private:
-    std::unordered_map<std::pair<int, int>, std::unique_ptr<Tile>, PairHash> m_board;
     int m_rows;
     int m_cols;
+    std::vector<std::unique_ptr<Enemy>> m_enemies;
+    std::unordered_map<std::pair<int, int>, std::unique_ptr<Tile>, PairHash> m_board;
 };

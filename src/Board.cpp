@@ -1,18 +1,21 @@
 #include "Board.h"
 #include "FullTile.h"
 #include "EmptyTile.h"
-#include <SFML/Graphics.hpp>
-#include <iostream>
 #include "GlobalSizes.h"
+#include <SFML/Graphics.hpp>
+#include <cstdlib> // for srand and rand
+#include <ctime> // for time
+#include <iostream>
 
 Board::Board(int rows, int cols)
     : m_rows(rows), m_cols(cols)
 {
-    initializeBoard();
+    // initializeBoard();
 }
 
-void Board::initializeBoard()
+void Board::initializeBoard(int numOfEnemies=0)
 {
+    m_board.clear();
     for (int i = 0; i < m_rows; ++i) {
         for (int j = 0; j < m_cols; ++j) {
             // Determine if the current tile should be a border tile
@@ -26,19 +29,23 @@ void Board::initializeBoard()
             }
         }
     }
-}
+    // set enemy start positions
+    srand(static_cast<unsigned>(time(0))); // seed random starting positions
+    for (int i = 0; i < numOfEnemies; i++)
+    {
+        int posX{ 1 + rand() % (m_cols - 2) };
+        int posY{ 1 + rand() % (m_rows - 2) };
 
-void Board::reset(sf::RenderWindow& window)
-{// Reset the board to its initial state
-    initializeBoard();
-    draw(window);
-	std::cout << "Board reset to initial state." << std::endl;
-    // restart clock
+        auto e = std::make_unique<Enemy>();
+        e->setPosition(sf::Vector2f(posX * tileSize, posY * tileSize));
+        m_enemies.push_back(std::move(e));
+    }
 }
 
 void Board::draw(sf::RenderWindow& window) const
 {
     int width_offset = (window.getSize().x - (m_cols * tileSize)) / 2;
+    // Draw Tiles
     for (const auto& pair : m_board) {
         const std::pair<int, int>& pos = pair.first;
         const std::unique_ptr<Tile>& tilePtr = pair.second;
@@ -57,4 +64,12 @@ void Board::draw(sf::RenderWindow& window) const
             // std::cout << "Warning: Null tilePtr at pos (" << pos.first << "," << pos.second << ")" << std::endl;
         }
     }
+    // Draw Enemies
+    for (const auto& enemy : m_enemies)
+    {
+        sf::Vector2f originalPos = enemy->getLocation();
+        enemy->setPosition(sf::Vector2f(width_offset + originalPos.x, originalPos.y));
+        enemy->draw(window);
+    }
+    
 }

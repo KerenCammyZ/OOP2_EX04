@@ -67,8 +67,9 @@ GameObject GameObject::operator=(const GameObject& other)
 // Draw object on screen
 void GameObject::draw(sf::RenderWindow& window)
 {
-    if (m_shape) { // Only draw if the shape exists
+    if (m_shape) {
         window.draw(*m_shape);
+        // TODO: apply window width offset if position not aligned with board
     }
 }
 

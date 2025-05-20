@@ -1,3 +1,4 @@
+#include <SFML\Graphics.hpp>
 #include <iostream>
 #include <string>
 #include "Controller.h"
@@ -7,16 +8,16 @@
 int rows = 50;
 int cols = 80;
 
-Controller::Controller() 
+Controller::Controller()
 	: m_window(sf::VideoMode(800, 600), "Xonix"),
 	m_running(false),
 	m_board{rows,cols},
 	m_levelManager("levels.txt")
+
 {
 	if (!m_levelManager.initialize()) {
 		throw std::runtime_error("Failed to initialize level manager");
 	}
-
 	sf::Vector2u windowSize = m_levelManager.getWindowSize();
 
 	// Update the window size based on the data read from the file
@@ -24,37 +25,56 @@ Controller::Controller()
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 }
 
-bool isWaitingForStart = true;
+
 void Controller::run()
 {
-	waitForSpace(); // Wait for space key to be pressed before starting the game
+	waitForSpace(); // Wait for space key to be pressed before starting the game  
+	LevelData levelData; // initialize struct from class LevelManager with fields: requiredPercentage, enemyCount
 	m_player.setPosition(sf::Vector2f(100, 100));
+	bool isLoadNextLevel = true;
 	while (m_window.isOpen())
 	{
-		// handle input
+		// handle input  
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				m_window.close();
 		}
+		if (isLoadNextLevel)
+		{
+			// Load next level
+			if (m_levelManager.loadNextLevel(levelData)) // write to levelData
+			{
+				m_lives = m_levelManager.getInitialLives();
+				m_requiredPercentage = levelData.requiredPercentage;
+				
+				m_board.initializeBoard(levelData.enemyCount);
+				m_board.draw(m_window);
+
+				m_player.setPosition(sf::Vector2f(100, 100));
+				isLoadNextLevel = false;
+			}
+		}
 		m_deltaTime = m_clock.restart();
 
-		// clear window with black color
+		// clear window with black color  
 		m_window.clear(sf::Color::Black);
-
-		// update the game state
+		// update the game state  
 		//update();
+		// if( 
 		handleKeyPressed(event.key.code, m_deltaTime);
-		// draw everything
-		// draw();
+
+		// draw everything  
+		// draw();  
 		m_board.draw(m_window);
 		m_player.draw(m_window);
-		// end the current frame
+		// end the current frame  
 		m_window.display();
 	}
 }
 
+	/*
 void Controller::loadLevel(const std::string& fileName)
 {
 	// Load the level from the file
@@ -68,6 +88,7 @@ void Controller::loadLevel(const std::string& fileName)
 
 	file.close();
 }
+*/
 
 void Controller::update()
 {
@@ -84,9 +105,10 @@ void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 	m_player.move(deltaTime);
 }
 
+// wait for user to press spacebar before starting the game
 void Controller::waitForSpace()
 {
-	while (m_window.isOpen() && isWaitingForStart)
+	while (m_window.isOpen() && !m_running)
 	{
 		sf::Event event;
 		while (m_window.pollEvent(event))
@@ -94,10 +116,20 @@ void Controller::waitForSpace()
 			if (event.type == sf::Event::Closed)
 				m_window.close();
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
-				isWaitingForStart = false;
+				m_running = true;
 		}
 		m_window.clear(sf::Color::Black);
-		// Optionally, draw a "Press Space to Start" message here
+		
+		// draw a "Press Space to Start" message here
+		sf::Font font;
+		if (!font.loadFromFile("arial.ttf")) {
+			throw std::runtime_error("Failed to load font file: arial.ttf");
+		}
+		sf::Text text("Press Space to Start", font, 30);
+		text.setFillColor(sf::Color::White);
+		text.setPosition(m_window.getSize().x / 2 - text.getGlobalBounds().width / 2,
+			m_window.getSize().y / 2 - text.getGlobalBounds().height / 2);
+		m_window.draw(text);
 		m_window.display();
 	}
 }

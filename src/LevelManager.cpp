@@ -38,6 +38,7 @@ bool LevelManager::initialize()
     return false;
 }
 
+// @param levelData :  struct LevelManager::LevelData
 bool LevelManager::loadNextLevel(LevelData& levelData)
 {
     std::string line;
@@ -48,7 +49,7 @@ bool LevelManager::loadNextLevel(LevelData& levelData)
             return true;
         }
     }
-    std::cout << "LevelManager loadnextlevel\n";
+    std::cout << "LevelManager loadNextLevel\n";
     return false;
 }
 
