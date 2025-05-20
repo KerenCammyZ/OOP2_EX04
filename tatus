@@ -1,0 +1,235 @@
+[33mcommit 912d074fd867041c0a1db28b33edb8660a074113[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Tue May 20 16:05:26 2025 +0300
+
+    init_from_file
+
+[33mcommit 8225959decfa7606ee4aa766c361d88948ae436f[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Tue May 20 11:37:34 2025 +0300
+
+    add fonts, loadNextLevel
+
+[33mcommit 12cbc051c8ffecc83a36ede7ff950fd6459a283e[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Tue May 20 10:22:05 2025 +0300
+
+    add waitForSpace function to start the game
+
+[33mcommit a59d03588f9973bc7fb71bf24f747f0abbe264d6[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Tue May 20 10:01:58 2025 +0300
+
+    add reset function to Board
+
+[33mcommit 8ad48df3ab1f3402770d6982760e69f3eefc45dc[m[33m ([m[1;31morigin/LevelManager[m[33m, [m[1;32mLevelManager[m[33m)[m
+Author: Yissachar Welt <yissacharwe@std.jmc.ac.il>
+Date:   Mon May 19 21:30:59 2025 +0300
+
+    read window size from file
+
+[33mcommit 82dde3b6bc3edd7334ea5afa00854c3ad6fbb0f5[m
+Author: Yissachar Welt <yissacharwe@std.jmc.ac.il>
+Date:   Mon May 19 20:22:34 2025 +0300
+
+    remove instances of m_tileSize
+
+[33mcommit b1b478d3c5bb6642bb67af35c13ab3fbacddd54f[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Mon May 19 19:45:35 2025 +0300
+
+    add GlobalSizes.h
+
+[33mcommit 269a1b5ef272fd09bc378cc78ee81f39b02a1ee1[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Mon May 19 15:01:29 2025 +0300
+
+    merge please
+
+[33mcommit f723ce34dd4dfb7bd5dba35ec03ace41371ffba0[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Mon May 19 15:00:41 2025 +0300
+
+    another merge
+
+[33mcommit c29e73f36c9cacb3a3f4e273124a034ee123ae7f[m
+Merge: 8845e01 784112f
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Mon May 19 14:53:53 2025 +0300
+
+    merge with player-movement
+
+[33mcommit 8845e018fcef0a04e01bbcf02b72b940a7f04b00[m
+Merge: 7f8b7df b0d1665
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Mon May 19 14:48:41 2025 +0300
+
+    merge with Branch-cont complete
+
+[33mcommit 784112f063d580add62bde4820180b18f5218b01[m[33m ([m[1;31morigin/player-movement[m[33m)[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Mon May 19 14:43:27 2025 +0300
+
+    commit before merge
+
+[33mcommit 61cf87bcf4f7e2998af83370f260c6ceaa1338d6[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Sun May 18 14:51:31 2025 +0300
+
+    remove smart pointer to player to save resources
+
+[33mcommit 6b58bbe6294267f44fc8a4175a95cf882f65bd19[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Sun May 18 14:37:06 2025 +0300
+
+    player move on screen no collision
+
+[33mcommit 7956dcc2158e714f4c2936c7e2a1b2fae69de5d8[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Sun May 18 13:17:55 2025 +0300
+
+    first commit in movement
+
+[33mcommit b0d166558d546f1d6cd2842e2639608f65f23a91[m[33m ([m[1;31morigin/Board-cont[m[33m, [m[1;32mBoard-cont[m[33m)[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Sat May 17 22:02:51 2025 +0300
+
+    clean hash function code
+
+[33mcommit 1aa9b1fc3d35deac2559c0f63a3850f1b9e53541[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Sat May 17 21:20:33 2025 +0300
+
+    Board continuation
+
+[33mcommit d0bb4eb564025dd3512f75ce28bd86d0b6e194ef[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Sat May 17 17:09:17 2025 +0300
+
+    changes to Board local
+
+[33mcommit fbed667d270e8183398e567ac0037a6721a94d6a[m[33m ([m[1;31morigin/Board[m[33m, [m[1;32mtile-rendering[m[33m, [m[1;32mBoard[m[33m)[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Sat May 17 10:55:48 2025 +0300
+
+    cleanup unused code
+
+[33mcommit 6fe69a1060553cdca7e0d01cd359c6382c80c449[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 22:21:25 2025 +0300
+
+    board now print properly with gemini help
+
+[33mcommit 06182f1c5a7b544ad0ff77a23ad1f5d54a8cbb34[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 19:44:25 2025 +0300
+
+    start work on board
+
+[33mcommit 2b6fd3d1561785655620dbe710e576293c181c1e[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 17:48:50 2025 +0300
+
+    change StaticObject to Tile
+
+[33mcommit 1ea4a15cea38a497ab2f264af2944d3dd604b8a2[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 17:29:07 2025 +0300
+
+    add StaticObject
+
+[33mcommit 20e80f639992b906aaef06ac9aabe588e449d47b[m[33m ([m[1;31morigin/game-object/unique-ptr[m[33m, [m[1;32mgame-object/unique-ptr[m[33m)[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 17:15:48 2025 +0300
+
+    add getShape to GameObject
+
+[33mcommit 7f8b7df728bfa013092c1082c5bb6f634c9aa6c4[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 17:09:32 2025 +0300
+
+    commit before switch
+
+[33mcommit 7fae1465af5943eac01d4ea164ffe6286b2d25c1[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Fri May 16 16:37:00 2025 +0300
+
+    replace sf::rectangleshape with sf::shape using unique_ptr
+
+[33mcommit e292f9f98781b5e1199160681a0612aec21271ee[m[33m ([m[1;31morigin/GameObjectTest[m[33m)[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 12:09:38 2025 +0300
+
+    fixes to Controller
+
+[33mcommit 3b21a4d1704d3bfbd7b12c418e852b19abc46b72[m
+Merge: c2194a0 6bf7d9f
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 11:49:14 2025 +0300
+
+    merging
+
+[33mcommit c2194a0b5da7801cb7da8b37cbb1b6820edb257b[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Fri May 16 11:42:42 2025 +0300
+
+    window into pointer
+
+[33mcommit 6bf7d9f3134f185f9da6a01145ae7fbd14f37eb4[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Fri May 16 09:24:30 2025 +0300
+
+    fix compilation errors caused by last commit
+
+[33mcommit 58e6407291d662dcd5e77c882a5ca8072754743c[m
+Author: Intelligate <lev.welt@gmail.com>
+Date:   Fri May 16 08:21:14 2025 +0300
+
+    Add GameObject Derived classes
+
+[33mcommit 20fa636bdbe8a24e47c9c36da7a6c43720cc57ac[m
+Merge: 18d87ed 0cdd189
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Thu May 15 22:57:06 2025 +0300
+
+    commit after merge into master
+
+[33mcommit 18d87edd008c4490495890200a1e11834fadcb21[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Thu May 15 22:52:32 2025 +0300
+
+    commit before merge into main
+
+[33mcommit 0cdd1898e0e84ac6393ab604349d87d0915eb218[m
+Author: yissacharwe <96682093+yissacharwe@users.noreply.github.com>
+Date:   Thu May 15 20:17:38 2025 +0300
+
+    GameObject setColor definition
+    
+    added missing definition for setColor declaration
+
+[33mcommit 14aafc1c2eadd64b1b4b38373ebfff9eac23cdde[m
+Author: yissacharwe <96682093+yissacharwe@users.noreply.github.com>
+Date:   Thu May 15 20:14:59 2025 +0300
+
+    Update GameObject constructor
+    
+    initialize m_position in member initializer list
+
+[33mcommit f355f4f82cf584f7a42894bd5695cec4c1686a25[m
+Author: Keren (Cammy) Zaig <kerenza@edu.jmc.ac.il>
+Date:   Thu May 15 15:00:31 2025 +0300
+
+    made outline for GameObject with virtual functions and ready to handle collision in the future
+
+[33mcommit d827a8a3adbf822b682f442b502f29a6c7a79f5e[m
+Author: Cam <Cam@LAPTOP-BOO15FHD>
+Date:   Thu May 15 13:03:07 2025 +0300
+
+    Add project files.
+
+[33mcommit 54f24a84aabcfb3401744704879af9c9dfb4ff81[m
+Author: Cam <Cam@LAPTOP-BOO15FHD>
+Date:   Thu May 15 13:03:05 2025 +0300
+
+    Add .gitattributes and .gitignore.
