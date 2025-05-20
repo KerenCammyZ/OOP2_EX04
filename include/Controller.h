@@ -31,5 +31,5 @@ private:
    bool m_running{ false };  // defines game state
    int m_requiredPercentage{50};  // required to complete level
    sf::Time m_deltaTime;  
-   sf::Clock m_clock;  
+   sf::Clock m_clock;
 };
