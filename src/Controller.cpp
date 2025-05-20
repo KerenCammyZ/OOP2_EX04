@@ -24,9 +24,10 @@ Controller::Controller()
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 }
 
-
+bool isWaitingForStart = true;
 void Controller::run()
 {
+	waitForSpace(); // Wait for space key to be pressed before starting the game
 	m_player.setPosition(sf::Vector2f(100, 100));
 	while (m_window.isOpen())
 	{
@@ -37,7 +38,6 @@ void Controller::run()
 			if (event.type == sf::Event::Closed)
 				m_window.close();
 		}
-
 		m_deltaTime = m_clock.restart();
 
 		// clear window with black color
@@ -82,4 +82,22 @@ void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 {
 	m_player.setDirection(keyCode);
 	m_player.move(deltaTime);
+}
+
+void Controller::waitForSpace()
+{
+	while (m_window.isOpen() && isWaitingForStart)
+	{
+		sf::Event event;
+		while (m_window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				m_window.close();
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+				isWaitingForStart = false;
+		}
+		m_window.clear(sf::Color::Black);
+		// Optionally, draw a "Press Space to Start" message here
+		m_window.display();
+	}
 }

@@ -19,6 +19,8 @@ public:
 	void draw();
 	void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);
 
+	void waitForSpace();
+
 private:
 	sf::RenderWindow m_window; // { sf::VideoMode(1000, 1200), "Xonix" };
 	Board m_board; //TODO: change to dynamic size

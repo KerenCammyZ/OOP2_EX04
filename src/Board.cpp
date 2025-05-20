@@ -33,6 +33,7 @@ void Board::reset(sf::RenderWindow& window)
     initializeBoard();
     draw(window);
 	std::cout << "Board reset to initial state." << std::endl;
+    // restart clock
 }
 
 void Board::draw(sf::RenderWindow& window) const
