@@ -1,3 +1,3 @@
 #pragma once
 
-constexpr int tileSize = 20;
+constexpr int tileSize = 10;
