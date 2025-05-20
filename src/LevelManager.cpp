@@ -48,7 +48,7 @@ bool LevelManager::loadNextLevel(LevelData& levelData)
             return true;
         }
     }
-
+    std::cout << "LevelManager loadnextlevel\n";
     return false;
 }
 
