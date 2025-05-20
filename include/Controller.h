@@ -23,6 +23,7 @@ private:
 	sf::RenderWindow m_window; // { sf::VideoMode(1000, 1200), "Xonix" };
 	Board m_board; //TODO: change to dynamic size
 	Player m_player;
+	LevelManager m_levelManager;
 
 	bool m_running{ false };
 	sf::Time m_deltaTime;

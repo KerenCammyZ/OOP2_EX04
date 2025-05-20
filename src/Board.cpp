@@ -8,10 +8,15 @@
 Board::Board(int rows, int cols)
     : m_rows(rows), m_cols(cols)
 {
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+    initializeBoard();
+}
+
+void Board::initializeBoard()
+{
+    for (int i = 0; i < m_rows; ++i) {
+        for (int j = 0; j < m_cols; ++j) {
             // Determine if the current tile should be a border tile
-            bool is_border_tile = (i == 0 || i == (rows - 1) || j == 0 || j == (cols - 1));
+            bool is_border_tile = (i == 0 || i == (m_rows - 1) || j == 0 || j == (m_cols - 1));
 
             if (is_border_tile) {
                 m_board[{i, j}] = std::make_unique<FullTile>();
@@ -21,6 +26,13 @@ Board::Board(int rows, int cols)
             }
         }
     }
+}
+
+void Board::reset(sf::RenderWindow& window)
+{// Reset the board to its initial state
+    initializeBoard();
+    draw(window);
+	std::cout << "Board reset to initial state." << std::endl;
 }
 
 void Board::draw(sf::RenderWindow& window) const

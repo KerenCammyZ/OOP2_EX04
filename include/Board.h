@@ -21,6 +21,8 @@ class Board
 public:
     Board(int rows, int cols);
     Board(const Board&) = default;
+    void initializeBoard();
+	void reset(sf::RenderWindow& window);
     void draw(sf::RenderWindow& window) const;
 
 private:
