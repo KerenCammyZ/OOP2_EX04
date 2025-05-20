@@ -3,7 +3,7 @@
 
 Player::Player()
 {
-	m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(m_tileSize, m_tileSize));
+	m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(tileSize, tileSize));
 	setColor(sf::Color::Magenta);
 	setPosition(sf::Vector2f(0, 0));
 }

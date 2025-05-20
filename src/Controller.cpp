@@ -8,6 +8,7 @@ int cols = 80;
 Controller::Controller() : m_window(sf::VideoMode(1000, 1100), "Xonix"), m_running(false), m_board{50,50}
 {
 	m_player.setPosition(sf::Vector2f(100, 100));
+	m_boundry = Boundry(50, 50);
 }
 
 

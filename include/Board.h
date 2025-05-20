@@ -23,6 +23,12 @@ public:
     Board(const Board&) = default;
     void draw(sf::RenderWindow& window) const;
 
+ /*   virtual void handleCollision(GameObject& unknownObj) override {};
+    virtual void handleCollision(Enemy& enemy) override {};
+    virtual void handleCollision(Player& player) override {};
+    virtual void handleCollision(Boundry& boundry) override {};
+    virtual void handleCollision(Tile& tile) override {};*/
+
 private:
     std::unordered_map<std::pair<int, int>, std::unique_ptr<Tile>, PairHash> m_board;
     int m_rows;

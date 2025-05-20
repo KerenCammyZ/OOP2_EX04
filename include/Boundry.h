@@ -1,11 +1,11 @@
 #pragma once
-#include "MovingObject.h"
+#include "GameObject.h"
 
-class Enemy : public MovingObject
+class Boundry : public GameObject
 {
 public:
-	Enemy();
-	~Enemy() override = default;
+	Boundry() = default;
+	Boundry(int width, int height);
 
 	virtual void handleCollision(GameObject& unknownObj) override {};
 	virtual void handleCollision(Enemy& enemy) override {};
@@ -14,5 +14,6 @@ public:
 	virtual void handleCollision(Tile& tile) override {};
 
 private:
-	// m_shape
+	int m_width;
+	int m_height;
 };
