@@ -36,6 +36,16 @@ void Player::setDirection(sf::Keyboard::Key keyCode)
 		}
 }
 
+//void Player::removeLife()
+//{
+//	m_life--;
+//}
+//
+//int Player::getLife()
+//{
+//	return m_life;
+//}
+
 void Player::move(sf::Time deltaTime)
 {
 	m_oldPosition = m_shape->getPosition();

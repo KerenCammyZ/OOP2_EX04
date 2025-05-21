@@ -10,7 +10,8 @@ public:
 
 	//setters and getters
 	void setDirection(sf::Keyboard::Key keyCode);
-	//void setLife(int life);
+	/*void removeLife();
+	int getLife();*/
 
 	virtual void handleCollision(GameObject& unknownObj) override {};
 	virtual void handleCollision(Enemy& enemy) override {};
@@ -19,7 +20,7 @@ public:
 
 
 private:
-	//int m_life;
+	//int m_life = 3;
 	sf::Vector2f m_direction;
 	float m_speed = 160.f;
 };

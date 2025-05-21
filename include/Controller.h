@@ -18,7 +18,7 @@ public:
    void update();
    void draw();  
    void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);  
-   //void loadLevel(const std::string& fileName);  
+   void handleStats();
 
    void waitForSpace();  
 

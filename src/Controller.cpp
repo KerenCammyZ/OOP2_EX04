@@ -6,7 +6,6 @@
 #include "GlobalSizes.h"
 
 
-
 Controller::Controller()
 	: m_window(sf::VideoMode(800, 600), "Xonix"),
 	m_running(false),
@@ -62,15 +61,22 @@ void Controller::run()
 
 		// clear window with black color  
 		m_window.clear(sf::Color::Black);
+
 		// update the game state  
 		//update(); 
-		handleCollisions();
 		handleKeyPressed(event.key.code, m_deltaTime);
+		handleCollisions();
+		if (m_lives <= 0) //if(m_player.getLives() <= 0)
+		{
+			isLoadNextLevel = true;
+		}
 
 		// draw everything  
 		// draw();  
 		m_board.draw(m_window);
 		m_player.draw(m_window);
+		handleStats();
+
 		// end the current frame  
 		m_window.display();
 	}
@@ -100,6 +106,20 @@ void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 {
 	m_player.setDirection(keyCode);
 	m_player.move(deltaTime);
+}
+
+void Controller::handleStats()
+{
+	// handle stats here
+	// draw lives, score, etc...
+	sf::Font font;
+	if (!font.loadFromFile("arial.ttf")) {
+		throw std::runtime_error("Failed to load font file: arial.ttf");
+	}
+	sf::Text lives("Lives: " + std::to_string(m_lives), font, 30);
+	lives.setFillColor(sf::Color::White);
+	lives.setPosition(10, m_window.getSize().y - 35);
+	m_window.draw(lives);
 }
 
 // wait for user to press spacebar before starting the game
