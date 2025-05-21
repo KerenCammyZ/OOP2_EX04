@@ -7,6 +7,10 @@
 #include <ctime> // for time
 #include <iostream>
 
+Board::Board() : m_rows(0), m_cols(0)
+{
+    // Default constructor
+}
 Board::Board(int rows, int cols)
     : m_rows(rows), m_cols(cols)
 {

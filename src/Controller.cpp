@@ -5,15 +5,13 @@
 #include "GameObject.h"
 #include "GlobalSizes.h"
 
-int rows = 50;
-int cols = 80;
+
 
 Controller::Controller()
 	: m_window(sf::VideoMode(800, 600), "Xonix"),
 	m_running(false),
-	m_board{rows,cols},
-	m_levelManager("levels.txt")
-
+	m_levelManager("levels.txt"),
+	m_board() // Initialize with default constructor
 {
 	if (!m_levelManager.initialize()) {
 		throw std::runtime_error("Failed to initialize level manager");
@@ -23,6 +21,9 @@ Controller::Controller()
 	// Update the window size based on the data read from the file
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
+
+	m_board = Board(m_window.getSize().x / tileSize, m_window.getSize().y / tileSize);
+	
 }
 
 

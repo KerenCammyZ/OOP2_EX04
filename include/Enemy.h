@@ -5,7 +5,7 @@ class Enemy : public MovingObject
 {  
 public:  
    Enemy();  
-   ~Enemy() = default; 
+   ~Enemy() override = default; 
 
    virtual void move(sf::Time deltaTime) override;
 
