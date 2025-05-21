@@ -11,15 +11,26 @@ Board::Board() : m_rows(0), m_cols(0)
 {
     // Default constructor
 }
+
 Board::Board(int rows, int cols)
     : m_rows(rows), m_cols(cols)
 {
     // initializeBoard();
 }
 
+void Board::reset()
+{
+	// Reset the board to its initial state
+	m_board.clear();
+    int enemyCount{ static_cast<int>(m_enemies.size()) };
+	m_enemies.clear();
+	initializeBoard(enemyCount);
+}
+
 void Board::initializeBoard(int numOfEnemies=0)
 {
     m_board.clear();
+    m_enemies.clear();
     for (int i = 0; i < m_rows; ++i) {
         for (int j = 0; j < m_cols; ++j) {
             // Determine if the current tile should be a border tile
@@ -84,7 +95,6 @@ void Board::update(sf::Time deltaTime) const
 {
     for (const auto& enemy : m_enemies)
     {
-
         enemy->move(deltaTime);
     }
 }

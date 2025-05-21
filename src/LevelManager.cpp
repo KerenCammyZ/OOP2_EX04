@@ -62,3 +62,8 @@ int LevelManager::getInitialLives() const
 {
     return m_initialLives;
 }
+
+int LevelManager::getEnemyCount() const
+{
+    return m_enemyCount;
+}

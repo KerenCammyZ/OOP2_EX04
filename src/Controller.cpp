@@ -41,6 +41,9 @@ void Controller::run()
 		{
 			if (event.type == sf::Event::Closed)
 				m_window.close();
+			// reset board for debugging (enemy movement)
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R)
+				m_board.reset();
 		}
 		if (isLoadNextLevel)
 		{
@@ -100,7 +103,6 @@ void Controller::update()
 
 void Controller::draw()
 {
-
 }
 
 void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
@@ -151,6 +153,7 @@ void Controller::waitForSpace()
 		m_window.display();
 	}
 }
+
 
 void Controller::handleCollisions()
 {

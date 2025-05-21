@@ -10,12 +10,6 @@ struct LevelData {
 };
 
 class LevelManager {
-private:
-    std::string m_filePath;
-    sf::Vector2u m_windowSize;
-    int m_initialLives;
-    std::ifstream m_fileStream;
-
 public:
     LevelManager(const std::string& filePath);
     ~LevelManager();
@@ -25,4 +19,12 @@ public:
 
     sf::Vector2u getWindowSize() const;
     int getInitialLives() const;
+    int getEnemyCount() const;
+
+private:
+    int m_initialLives;
+    int m_enemyCount;
+    std::string m_filePath;
+    sf::Vector2u m_windowSize;
+    std::ifstream m_fileStream;
 };

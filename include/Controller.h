@@ -20,7 +20,7 @@ public:
    void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);  
    void handleStats();
 
-   void waitForSpace();  
+   void waitForSpace();
 
    void handleCollisions();
    virtual void handleCollision(GameObject& unknownObj) {};

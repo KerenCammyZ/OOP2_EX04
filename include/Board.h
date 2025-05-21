@@ -34,6 +34,8 @@ public:
     int getRows() const { return m_rows; }
     int getCols() const { return m_cols; }
 
+    void reset(); // reset board (for debugging)
+
 private:
     int m_rows;
     int m_cols;
