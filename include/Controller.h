@@ -32,7 +32,7 @@ private:
    Board m_board; 
    Player m_player;  
    LevelManager m_levelManager;  
-   sf::RenderWindow m_window; // { sf::VideoMode(1000, 1200), "Xonix" }; 
+   sf::RenderWindow m_window;
 
    int m_lives{3};
    bool m_running{ false };  // defines game state

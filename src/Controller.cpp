@@ -63,7 +63,8 @@ void Controller::run()
 		m_window.clear(sf::Color::Black);
 
 		// update the game state  
-		//update(); 
+		//update();
+		m_board.update(m_deltaTime);
 		handleKeyPressed(event.key.code, m_deltaTime);
 		handleCollisions();
 		if (m_lives <= 0) //if(m_player.getLives() <= 0)

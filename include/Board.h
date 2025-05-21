@@ -30,6 +30,7 @@ public:
     Board& operator=(Board&&) = default;
     void initializeBoard(int numOfEnemies);
     void draw(sf::RenderWindow& window) const;
+    void update(sf::Time deltaTime) const;
     int getRows() const { return m_rows; }
     int getCols() const { return m_cols; }
 
