@@ -35,6 +35,8 @@ public:
     int getCols() const { return m_cols; }
 
     void reset(); // reset board (for debugging)
+	const std::vector<std::unique_ptr<Enemy>>& getEnemies() const { return m_enemies; }
+    const std::unordered_map<std::pair<int, int>, std::unique_ptr<Tile>, PairHash>& getTiles() const { return m_board; }
 
 private:
     int m_rows;
