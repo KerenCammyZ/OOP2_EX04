@@ -31,6 +31,7 @@ void Controller::run()
 	waitForSpace(); // Wait for space key to be pressed before starting the game  
 	LevelData levelData; // initialize struct from class LevelManager with fields: requiredPercentage, enemyCount
 	m_player.setPosition(sf::Vector2f(100, 100));
+	m_player.setOldPosition(m_player.getStartPosition());
 	bool isLoadNextLevel = true;
 	while (m_window.isOpen())
 	{
@@ -61,9 +62,9 @@ void Controller::run()
 		// clear window with black color  
 		m_window.clear(sf::Color::Black);
 		// update the game state  
-		//update();
-		// if( 
+		//update(); 
 		handleKeyPressed(event.key.code, m_deltaTime);
+		handleCollisions();
 
 		// draw everything  
 		// draw();  
@@ -74,21 +75,16 @@ void Controller::run()
 	}
 }
 
-	/*
-void Controller::loadLevel(const std::string& fileName)
+void Controller::checkBoundries(GameObject& obj) const
 {
-	// Load the level from the file
-	std::ifstream file(fileName);
-	if (!file.is_open())
+	if (obj.getLocation().x >= m_board.getCols() * tileSize - 2 ||
+		obj.getLocation().y >= m_board.getRows() * tileSize - 2 ||
+		obj.getLocation().x <= 2 ||
+		obj.getLocation().y <= 2)
 	{
-		throw std::runtime_error("Failed to open level file: " + fileName);
+		obj.setLocation(obj.getOldLocation());
 	}
-	// Read the level data from the file
-	std::string line;
-
-	file.close();
 }
-*/
 
 void Controller::update()
 {
@@ -133,3 +129,18 @@ void Controller::waitForSpace()
 		m_window.display();
 	}
 }
+
+void Controller::handleCollisions()
+{
+	checkBoundries(m_player);
+	bool collided = false;
+	
+	//checkPlayerGameBounds(m_player);
+
+
+	if (collided)
+	{
+		// lose life, respawn, etc...
+	}
+}
+

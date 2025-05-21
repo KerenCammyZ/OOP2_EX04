@@ -25,14 +25,16 @@ public:
 
 	//setters and getters
 	sf::Vector2f getLocation() const;
+	sf::Vector2f getOldLocation() const;
 	sf::FloatRect getGlobalBounds() const;
 	sf::Vector2f getStartPosition() const;
-	sf::Vector2f getOldPosition() const;
 	sf::Shape& getShape() const;
 
 	void setColor(const sf::Color& color);
 	void setPosition(sf::Vector2f position);
 	void setStartPosition();
+	void setLocation(const sf::Vector2f& position);
+	void setOldPosition(const sf::Vector2f& position);
 
 	//handle collision with other game objects
 	bool checkCollision(GameObject& unknownObj) const;
@@ -41,7 +43,6 @@ public:
 	virtual void handleCollision(Enemy& enemy) {};
 	virtual void handleCollision(Player& player) {};
 	virtual void handleCollision(Tile& tile) {};
-	virtual void handleCollision(Boundry& boundry){};
 
 	
 protected:

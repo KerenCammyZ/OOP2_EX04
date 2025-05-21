@@ -92,7 +92,7 @@ sf::Vector2f GameObject::getStartPosition() const
     return m_startPosition;
 }
 
-sf::Vector2f GameObject::getOldPosition() const
+sf::Vector2f GameObject::getOldLocation() const
 {
     return m_oldPosition;
 }
@@ -127,11 +127,34 @@ void GameObject::setStartPosition()
     // m_shape.setPosition(50.f, 50.f); // Example of what it might do
 }
 
-// Collision checking (basic AABB)
+void GameObject::setLocation(const sf::Vector2f& position)
+{
+    m_position = position; 
+    if (m_shape) {
+        m_shape->setPosition(position);
+	}
+}
+
+void GameObject::setOldPosition(const sf::Vector2f& position)
+{
+    m_oldPosition = position; 
+}
+
 bool GameObject::checkCollision(GameObject& unknownObj) const
 {
-    if (m_shape && unknownObj.m_shape) {
-        return m_shape->getGlobalBounds().intersects(unknownObj.getGlobalBounds());
+    auto overLapping = 0.2f;
+    auto sizeDecrese = 1.4;
+
+    sf::FloatRect bounds[2];
+    bounds[0] = m_shape->getGlobalBounds();
+    bounds[1] = unknownObj.getGlobalBounds();
+
+    for (int i = 0; i < 2; i++)
+    {
+        bounds[i].left += bounds[i].width * overLapping;
+        bounds[i].top += bounds[i].height * overLapping;
+        bounds[i].width /= (sizeDecrese);
+        bounds[i].height /= (sizeDecrese);
     }
-    return false; // No collision if one or both objects lack a shape
+    return bounds[0].intersects(bounds[1]);
 }

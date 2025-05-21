@@ -2,7 +2,6 @@
 #include "Board.h"  
 #include "Player.h"  
 #include "LevelManager.h" 
-#include "Boundry.h"
 #include <string>  
 #include <fstream>  
 #include <SFML/Window.hpp>  
@@ -14,7 +13,8 @@ class Controller
 public:  
    Controller();  
    ~Controller() = default;  
-   void run();  
+   void run();
+   void checkBoundries(GameObject& obj) const;
    void update();
    void draw();  
    void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);  
@@ -22,24 +22,17 @@ public:
 
    void waitForSpace();  
 
-	virtual void handleCollision(GameObject& unknownObj) {};
-	virtual void handleCollision(Enemy& enemy) {};
-	virtual void handleCollision(Player& player) {};
-	virtual void handleCollision(Boundry& boundry) {};
-	virtual void handleCollision(Tile& tile) {};
-
-//private:
-//	sf::RenderWindow m_window{ sf::VideoMode(1000,1200), "Xonix" };
-//	Board m_board; //TODO: change to dynamic size
-//	Player m_player;
-//	Boundry m_boundry;
+   void handleCollisions();
+   virtual void handleCollision(GameObject& unknownObj) {};
+   virtual void handleCollision(Enemy& enemy) {};
+   virtual void handleCollision(Player& player) {};
+   virtual void handleCollision(Tile& tile) {};
 
 private:  
-   Board m_board; //TODO: change to dynamic size  
+   Board m_board; 
    Player m_player;  
    LevelManager m_levelManager;  
    sf::RenderWindow m_window; // { sf::VideoMode(1000, 1200), "Xonix" }; 
-   Boundry m_boundry;
 
    int m_lives{3};
    bool m_running{ false };  // defines game state
