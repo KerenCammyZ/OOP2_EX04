@@ -22,7 +22,7 @@ Controller::Controller()
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 
-	m_board = Board(m_window.getSize().y / tileSize, m_window.getSize().x / tileSize);
+	m_board = Board(m_window.getSize().y / tileSize - 4, m_window.getSize().x / tileSize); // leave 4 tileSize space on bottom for stats
 	
 }
 
@@ -64,8 +64,8 @@ void Controller::run()
 		m_window.clear(sf::Color::Black);
 		// update the game state  
 		//update(); 
-		handleKeyPressed(event.key.code, m_deltaTime);
 		handleCollisions();
+		handleKeyPressed(event.key.code, m_deltaTime);
 
 		// draw everything  
 		// draw();  
@@ -78,7 +78,7 @@ void Controller::run()
 
 void Controller::checkBoundries(GameObject& obj) const
 {
-	if (obj.getLocation().x >= m_board.getCols() * tileSize  ||
+	if (obj.getLocation().x >= m_board.getCols() * tileSize - tileSize  ||
 		obj.getLocation().y >= m_board.getRows() * tileSize - tileSize ||
 		obj.getLocation().x <= 0 ||
 		obj.getLocation().y <= 0)
