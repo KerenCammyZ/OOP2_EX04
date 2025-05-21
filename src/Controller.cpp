@@ -78,7 +78,7 @@ void Controller::run()
 void Controller::checkBoundries(GameObject& obj) const
 {
 	if (obj.getLocation().x >= m_board.getCols() * tileSize  ||
-		obj.getLocation().y >= m_board.getRows() * tileSize - 10 ||
+		obj.getLocation().y >= m_board.getRows() * tileSize - tileSize ||
 		obj.getLocation().x <= 0 ||
 		obj.getLocation().y <= 0)
 	{

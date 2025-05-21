@@ -44,7 +44,6 @@ void Board::initializeBoard(int numOfEnemies=0)
 
 void Board::draw(sf::RenderWindow& window) const
 {
-    int width_offset = (window.getSize().x - (m_cols * tileSize)) / 2;
     // Draw Tiles
     for (const auto& pair : m_board) {
         const std::pair<int, int>& pos = pair.first;
@@ -52,7 +51,7 @@ void Board::draw(sf::RenderWindow& window) const
 
         if (tilePtr) {
             tilePtr->setPosition(sf::Vector2f(
-                static_cast<float>(width_offset + pos.second * tileSize),
+                static_cast<float>(pos.second * tileSize),
                 static_cast<float>(pos.first * tileSize)
             ));
             tilePtr->draw(window);
@@ -68,7 +67,7 @@ void Board::draw(sf::RenderWindow& window) const
     for (const auto& enemy : m_enemies)
     {
         sf::Vector2f originalPos = enemy->getLocation();
-        enemy->setPosition(sf::Vector2f(width_offset + originalPos.x, originalPos.y));
+        enemy->setPosition(sf::Vector2f(originalPos.x, originalPos.y));
         enemy->draw(window);
     }
     
