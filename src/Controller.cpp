@@ -22,7 +22,7 @@ Controller::Controller()
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 
-	m_board = Board(m_window.getSize().x / tileSize, m_window.getSize().y / tileSize);
+	m_board = Board(m_window.getSize().y / tileSize, m_window.getSize().x / tileSize);
 	
 }
 
