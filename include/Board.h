@@ -31,10 +31,11 @@ public:
     void initializeBoard(int numOfEnemies);
     void draw(sf::RenderWindow& window) const;
     void update(sf::Time deltaTime) const;
+
+    void reset(); // reset board (for testing enemy movement)
+    
     int getRows() const { return m_rows; }
     int getCols() const { return m_cols; }
-
-    void reset(); // reset board (for debugging)
 	const std::vector<std::unique_ptr<Enemy>>& getEnemies() const { return m_enemies; }
     const std::unordered_map<std::pair<int, int>, std::unique_ptr<Tile>, PairHash>& getTiles() const { return m_board; }
 

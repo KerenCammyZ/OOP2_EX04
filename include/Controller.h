@@ -23,6 +23,7 @@ public:
    void waitForSpace();
 
    void handleCollisions();
+   void handleEnemyTileCollisions();
    virtual void handleCollision(GameObject& unknownObj) {};
    virtual void handleCollision(Enemy& enemy) {};
    virtual void handleCollision(Player& player) {};

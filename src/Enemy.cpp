@@ -1,45 +1,29 @@
-	/*
-	Enemy();
-	~Enemy() override = default;
-
-	virtual void move(sf::Time deltaTime) override;
-	float getXVelocity();
-
-	virtual void handleCollision(GameObject& unknownObj) override {};
-	virtual void handleCollision(Enemy& enemy) override {};
-	virtual void handleCollision(Player& player) override {};
-	virtual void handleCollision(Tile& tile) override {};
-
-
-	float m_speed = { 120.f };
-	float m_directionX{ .2f };
-	float m_directonY{ .2f };
-	sf::Vector2f m_direction;
-	*/
 #include "Enemy.h"
+#include <FullTile.h>
 
 Enemy::Enemy()
 {
 	m_shape = std::make_unique<sf::CircleShape>(tileSize / 2.0f);
-	m_shape->setFillColor(sf::Color::Red);
-	
+    m_shape->setFillColor(sf::Color::Red);
+	m_shape->setOrigin(tileSize / 2.0f, tileSize / 2.0f);
+
+
+    void setPosition(sf::Vector2f position);
+    void setStartPosition();
+    void setLocation(const sf::Vector2f & position);
+    void setOldPosition(const sf::Vector2f & position);
 }
 
 void Enemy::move(sf::Time deltaTime)
 {
-	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());
-	setPosition(m_shape->getPosition());
+	setOldPosition(getLocation());
+	setPosition(getLocation() + m_direction * m_speed * deltaTime.asSeconds());
 }
 
 
-void Enemy::reboundSides()
+void Enemy::handleCollision(Tile& tile)
 {
-	m_direction.x -= m_direction.x;
-}
 
-void Enemy::reboundTopBottom()
-{
-	m_direction.y = -m_direction.y;
 }
 
 

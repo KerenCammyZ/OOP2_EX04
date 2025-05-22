@@ -50,8 +50,8 @@ void Board::initializeBoard(int numOfEnemies=0)
     {
         int posX{ 1 + rand() % (m_cols - 2) };
         int posY{ 1 + rand() % (m_rows - 2) };
-	    double directionX{ 0.4 * static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
-        double directionY{ 0.4 * static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
+	    double directionX{ static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
+        double directionY{ static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
 
         auto e = std::make_unique<Enemy>();
         e->setPosition(sf::Vector2f(posX * tileSize, posY * tileSize));
@@ -84,8 +84,6 @@ void Board::draw(sf::RenderWindow& window) const
     // Draw Enemies
     for (const auto& enemy : m_enemies)
     {
-        //sf::Vector2f originalPos = enemy->getLocation();
-        //enemy->setPosition(sf::Vector2f(originalPos.x, originalPos.y));
         enemy->draw(window);
     }
     

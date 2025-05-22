@@ -4,14 +4,13 @@
 class Enemy : public MovingObject  
 {  
 public:  
-	Enemy();  
+	Enemy();
 
-    ~Enemy() override = default; 
+   ~Enemy() override = default; 
 
-    virtual void move(sf::Time deltaTime) override;
-	void reboundSides();
-	void reboundTopBottom();
+   virtual void move(sf::Time deltaTime) override;
 
+   //setters and getters
 	void setSpeed(const float speed);
 	void setDirection(const sf::Vector2f direction);
 	float getSpeed() const;
@@ -20,9 +19,9 @@ public:
 	virtual void handleCollision(GameObject& unknownObj) override {};
 	virtual void handleCollision(Enemy& enemy) override {};
 	virtual void handleCollision(Player& player) override {};
-	virtual void handleCollision(Tile& tile) override {};
+	virtual void handleCollision(Tile& tile) override;
 
-private:
-	float m_speed = { 120.f };
+	private:
+	float m_speed = { 140.f };
 	sf::Vector2f m_direction{ 1, 1 };
 };

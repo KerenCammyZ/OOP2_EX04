@@ -11,8 +11,9 @@ class GameObject
 {
 public:
 	//constructor and destructor
+	// TODO: possibly define Constructor delegation
 	GameObject();
-	explicit GameObject(std::unique_ptr<sf::Shape> shape);
+	explicit GameObject(std::unique_ptr<sf::Shape> shape); // add constructor delegation
 	GameObject(const sf::Vector2f& position, std::unique_ptr<sf::Shape> shape);
 	virtual ~GameObject() {};
 	//copy constructor and assignment operator 

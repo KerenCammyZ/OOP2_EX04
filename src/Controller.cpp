@@ -159,8 +159,9 @@ void Controller::waitForSpace()
 void Controller::handleCollisions()
 {
 	checkBoundries(m_player);
+	handleEnemyTileCollisions();
+
 	bool collided = false;
-	
 	//checkPlayerGameBounds(m_player);
 
 
@@ -168,5 +169,28 @@ void Controller::handleCollisions()
 	{
 		// lose life, respawn, etc...
 	}
+
+	// check for collisions between enemies and tiles
 }
+
+
+// Check for collisions between enemies and tiles  
+void Controller::handleEnemyTileCollisions()  
+{  
+    for (auto& enemyPtr : m_board.getEnemies())  
+    {  
+       auto& enemy = *enemyPtr;  
+       for (const auto& [pos, tilePtr] : m_board.getTiles())  
+       {  
+           // Check if the tile is a FullTile before handling collision  
+           if (dynamic_cast<FullTile*>(tilePtr.get()) && enemy.getGlobalBounds().intersects(tilePtr->getGlobalBounds()))  
+           {  
+               // Let the enemy handle the collision with the FullTile  
+               enemy.handleCollision(*tilePtr);  
+               break; // Only handle one tile per frame  
+           }  
+       }  
+    }
+}
+
 
