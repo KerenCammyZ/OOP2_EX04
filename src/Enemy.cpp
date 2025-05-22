@@ -3,7 +3,7 @@
 #include <iostream>
 
 Enemy::Enemy()
-	: m_speed{ 300.f }, m_direction{1,1}
+	: m_direction{1,1}
 {
 	m_shape = std::make_unique<sf::CircleShape>(tileSize / 2.0f);
     m_shape->setFillColor(sf::Color::Red);
@@ -22,7 +22,6 @@ void Enemy::move(sf::Time deltaTime)
 	setPosition(getLocation() + m_direction * m_speed * deltaTime.asSeconds());
 
 }
-
 
 void Enemy::handleCollision(Tile& fullTile)
 {
@@ -73,17 +72,6 @@ void Enemy::handleCollision(Tile& fullTile)
 		// Reverse vertical direction
 		m_direction.y = -m_direction.y;
 	}
-}
-
-
-float Enemy::getSpeed() const
-{
-	return m_speed;
-}
-
-void Enemy::setSpeed(const float speed)
-{
-	m_speed = speed;
 }
 
 sf::Vector2f Enemy::getDirection() const

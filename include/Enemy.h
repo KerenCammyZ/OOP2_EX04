@@ -11,9 +11,7 @@ public:
    virtual void move(sf::Time deltaTime) override;
 
    //setters and getters
-	void setSpeed(const float speed);
 	void setDirection(const sf::Vector2f direction);
-	float getSpeed() const;
 	sf::Vector2f getDirection() const;
 
 	virtual void handleCollision(GameObject& unknownObj) override {};
@@ -23,6 +21,5 @@ public:
 
 
 private:
-	float m_speed;
 	sf::Vector2f m_direction;
 };
