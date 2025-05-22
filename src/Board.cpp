@@ -54,8 +54,9 @@ void Board::initializeBoard(int numOfEnemies=0)
         double directionY{ static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
 
         auto e = std::make_unique<Enemy>();
+        
         e->setPosition(sf::Vector2f(posX * tileSize, posY * tileSize));
-        e->setDirection(sf::Vector2f(directionX, directionY));
+        e->setDirection(sf::Vector2f(directionX, directionY));        
         m_enemies.push_back(std::move(e));
     }
 }
@@ -86,7 +87,6 @@ void Board::draw(sf::RenderWindow& window) const
     {
         enemy->draw(window);
     }
-    
 }
 
 void Board::update(sf::Time deltaTime) const

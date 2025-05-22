@@ -21,8 +21,9 @@ Controller::Controller()
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 
-	m_board = Board(m_window.getSize().y / tileSize - 4, m_window.getSize().x / tileSize); // leave 4 tileSize space on bottom for stats
-	
+	int boardWidth = m_window.getSize().y / tileSize - 4;
+	int boardHeight = m_window.getSize().x / tileSize;
+	m_board = Board(boardWidth, boardHeight); // leave 4 tileSize space on bottom for stats
 }
 
 
@@ -158,6 +159,8 @@ void Controller::waitForSpace()
 
 void Controller::handleCollisions()
 {
+	for (auto& enemyPtr : m_board.getEnemies())
+		checkBoundries(*enemyPtr);
 	checkBoundries(m_player);
 	handleEnemyTileCollisions();
 
@@ -187,7 +190,7 @@ void Controller::handleEnemyTileCollisions()
            {  
                // Let the enemy handle the collision with the FullTile  
                enemy.handleCollision(*tilePtr);  
-               break; // Only handle one tile per frame  
+               break; // Only handle one tile per frame
            }  
        }  
     }

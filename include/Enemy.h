@@ -21,7 +21,8 @@ public:
 	virtual void handleCollision(Player& player) override {};
 	virtual void handleCollision(Tile& tile) override;
 
-	private:
-	float m_speed = { 140.f };
-	sf::Vector2f m_direction{ 1, 1 };
+
+private:
+	float m_speed;
+	sf::Vector2f m_direction;
 };
