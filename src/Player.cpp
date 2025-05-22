@@ -1,11 +1,13 @@
 #include "Player.h"
 #include "MovingObject.h"
+#include <memory>
 
 Player::Player()
 {
 	m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(tileSize, tileSize));
 	setColor(sf::Color::Magenta);
 	setPosition(sf::Vector2f(0, 0));
+	m_lives = 3;
 }
 
 void Player::setDirection(sf::Keyboard::Key keyCode)
@@ -46,9 +48,13 @@ void Player::setDirection(sf::Keyboard::Key keyCode)
 //	return m_life;
 //}
 
-void Player::move(sf::Time deltaTime)
-{
-	m_oldPosition = m_shape->getPosition();
-	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());
-	setPosition(m_shape->getPosition());
+void Player::move(sf::Time deltaTime)  
+{  
+	m_oldPosition = m_shape->getPosition();  
+	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());  
+	setPosition(m_shape->getPosition());  
+
+	auto tile = std::make_shared<Tile>(m_shape->getPosition().x, m_shape->getPosition().y, sf::Color::Magenta);  
+	tile->setPosition(m_shape->getPosition());  
+	m_trail.addTile(tile);
 }

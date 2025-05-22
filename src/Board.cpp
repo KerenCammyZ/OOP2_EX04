@@ -96,3 +96,12 @@ void Board::update(sf::Time deltaTime) const
         enemy->move(deltaTime);
     }
 }
+
+void Board::setTile(int row, int col, std::unique_ptr<Tile> tile)
+{
+    if (row >= 0 && row < m_rows && col >= 0 && col < m_cols) {
+        m_board[{row, col}] = std::move(tile);
+    } else {
+        throw std::out_of_range("Invalid tile position");
+	}
+}

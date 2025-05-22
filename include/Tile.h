@@ -5,6 +5,7 @@ class Tile : public GameObject
 {
 public:
 	Tile();
+	Tile(int x, int y, sf::Color color);
 	~Tile() override = default;
 	Tile operator=(const Tile& other);
 
