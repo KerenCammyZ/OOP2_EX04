@@ -74,6 +74,7 @@ void Controller::run()
 		// draw everything  
 		// draw();  
 		m_board.draw(m_window);
+		m_player.getTrail().draw(m_window);
 		m_player.draw(m_window);
 		handleStats();
 

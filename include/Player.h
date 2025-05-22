@@ -1,5 +1,6 @@
 #pragma once
 #include "MovingObject.h"
+#include "Trail.h"
 
 class Player : public MovingObject
 {
@@ -10,8 +11,10 @@ public:
 
 	//setters and getters
 	void setDirection(sf::Keyboard::Key keyCode);
-	/*void removeLife();
-	int getLife();*/
+	void removeLife();
+	int getLives();
+	void setLives(int life);
+	Trail& getTrail() { return m_trail; }
 
 	virtual void handleCollision(GameObject& unknownObj) override {};
 	virtual void handleCollision(Enemy& enemy) override {};
@@ -20,7 +23,10 @@ public:
 
 
 private:
-	//int m_life = 3;
+	int m_lives;
 	sf::Vector2f m_direction;
 	float m_speed = 160.f;
+
+	Trail m_trail;
+
 };

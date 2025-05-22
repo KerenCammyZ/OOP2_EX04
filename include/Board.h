@@ -32,6 +32,7 @@ public:
     void draw(sf::RenderWindow& window) const;
     int getRows() const { return m_rows; }
     int getCols() const { return m_cols; }
+	void setTile(int row, int col, std::unique_ptr<Tile> tile);
 
 private:
     int m_rows;
