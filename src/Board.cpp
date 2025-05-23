@@ -15,41 +15,47 @@ Board::Board() : m_rows(0), m_cols(0)
 Board::Board(int rows, int cols)
     : m_rows(rows), m_cols(cols)
 {
-    // initializeBoard();
+	// initializeBoard()
 }
 
+// Reset the board to its initial state (at current level)
 void Board::reset()
 {
-	// Reset the board to its initial state
-	m_board.clear();
     int enemyCount{ static_cast<int>(m_enemies.size()) };
 	m_enemies.clear();
+	m_board.clear();
+    // clear() trail
 	initializeBoard(enemyCount);
 }
 
+// Initialize the board with empty tiles and border tiles
+// Also set the initial positions and directions of enemies
 void Board::initializeBoard(int numOfEnemies=0)
 {
     m_board.clear();
     m_enemies.clear();
-    for (int i = 0; i < m_rows; ++i) {
-        for (int j = 0; j < m_cols; ++j) {
-            // Determine if the current tile should be a border tile
-            bool is_border_tile = (i == 0 || i == (m_rows - 1) || j == 0 || j == (m_cols - 1));
+    // set initial board state
+    for (int i = 0; i < m_rows; ++i) {  
+       for (int j = 0; j < m_cols; ++j) {  
+           // Determine if the current tile should be a border tile  
+           bool is_border_tile = (i < 2 || i >= (m_rows - 2) || j < 2 || j >= (m_cols - 2));  
 
-            if (is_border_tile) {
-                m_board[{i, j}] = std::make_unique<FullTile>();
-            }
-            else {
-                m_board[{i, j}] = std::make_unique<EmptyTile>();
-            }
-        }
+           if (is_border_tile) {  
+               m_board[{i, j}] = std::make_unique<FullTile>();  
+           }  
+           else {  
+               m_board[{i, j}] = std::make_unique<EmptyTile>();  
+           }  
+       }  
     }
+
     // set enemy starting directions and positions
-    srand(static_cast<unsigned>(time(0)));
     for (int i = 0; i < numOfEnemies; i++)
     {
-        int posX{ 1 + rand() % (m_cols - 2) };
-        int posY{ 1 + rand() % (m_rows - 2) };
+        // set random positions
+        srand(static_cast<unsigned>(time(0) + i)); // for enemies
+        int posX{ 2 + rand() % (m_cols - 4) };
+        int posY{ 2 + rand() % (m_rows - 4) };
 	    double directionX{ static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
         double directionY{ static_cast<float>((rand() % 2 == 0) ? -1 : 1 )};
 
@@ -61,6 +67,7 @@ void Board::initializeBoard(int numOfEnemies=0)
     }
 }
 
+// draw all tiles and enemies using their current positions
 void Board::draw(sf::RenderWindow& window) const
 {
     // Draw Tiles
@@ -89,14 +96,17 @@ void Board::draw(sf::RenderWindow& window) const
     }
 }
 
+// Update board state
 void Board::update(sf::Time deltaTime) const
 {
+    // update enemy positions
     for (const auto& enemy : m_enemies)
     {
         enemy->move(deltaTime);
     }
 }
 
+// Set a tile at a specific position
 void Board::setTile(int row, int col, std::unique_ptr<Tile> tile)
 {
     if (row >= 0 && row < m_rows && col >= 0 && col < m_cols) {
@@ -104,4 +114,41 @@ void Board::setTile(int row, int col, std::unique_ptr<Tile> tile)
     } else {
         throw std::out_of_range("Invalid tile position");
 	}
+}
+
+// Get a tile at a specific position
+Tile* Board::getTileAt(const sf::Vector2f& position) const
+{
+	// Convert pixel coordinates to tile indices
+    int row = static_cast<int>(position.y) / tileSize;
+    int col = static_cast<int>(position.x) / tileSize;
+
+	// Check if the position is within the bounds of the board
+	auto it = m_board.find({ row, col });
+    if (it != m_board.end()) {
+        return it->second.get();
+    }
+	// If the position is out of bounds, return nullptr
+    return nullptr;
+}
+
+// Add iterator support
+Board::iterator Board::find(const std::pair<int, int>& key)
+{
+    return m_board.find(key);
+}
+
+Board::const_iterator Board::find(const std::pair<int, int>& key) const
+{
+    return m_board.find(key);
+}
+
+Board::iterator Board::end()
+{
+    return m_board.end();
+}
+
+Board::const_iterator Board::end() const
+{
+    return m_board.end();
 }

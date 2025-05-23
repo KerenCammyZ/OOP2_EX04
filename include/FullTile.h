@@ -14,6 +14,8 @@ public:
 	virtual void handleCollision(Player& player) override {};
 	virtual void handleCollision(Tile& tile) override {};
 
+	virtual TileType getType() const { return TileType::Full; }
+
 private:
 
 };

@@ -1,13 +1,15 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <algorithm>  // std::min, std::max
 #include "Controller.h"
 #include "GameObject.h"
 #include "GlobalSizes.h"
 
 
 Controller::Controller()
-	: m_window(sf::VideoMode(800, 600), "Xonix"),
+	:
+	m_window(sf::VideoMode(800, 600), "Xonix"),
 	m_running(false),
 	m_levelManager("levels.txt"),
 	m_board() // Initialize with default constructor
@@ -21,83 +23,100 @@ Controller::Controller()
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 
-	int boardWidth = m_window.getSize().y / tileSize - 4;
-	int boardHeight = m_window.getSize().x / tileSize;
-	m_board = Board(boardWidth, boardHeight); // leave 4 tileSize space on bottom for stats
+	int rows = m_window.getSize().y / tileSize - 4;
+	int cols = m_window.getSize().x / tileSize;
+	m_board = Board(rows, cols); // leave 4 tileSize space on bottom for stats
 }
 
 
 void Controller::run()
 {
-	waitForSpace(); // Wait for space key to be pressed before starting the game  
-	LevelData levelData; // initialize struct from class LevelManager with fields: requiredPercentage, enemyCount
-	m_player.setPosition(sf::Vector2f(100, 100));
+	LevelData levelData;
+	m_player.setStartPosition(sf::Vector2f(100, 100));
 	m_player.setOldPosition(m_player.getStartPosition());
-	bool isLoadNextLevel = true;
+	waitForSpace(); // Wait for space key to be pressed before starting the game  
+	loadNextLevel(levelData); // Load the first level
+
 	while (m_window.isOpen())
 	{
+		m_deltaTime = m_clock.restart();
+		
 		// handle input  
+		// handleEvents()
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				m_window.close();
-			
-			// reset board option (for debugging enemy movement)
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R)
-				m_board.reset();
 		}
-		if (isLoadNextLevel)
-		{
-			// Load next level
-			if (m_levelManager.loadNextLevel(levelData)) // write to levelData
-			{
-				m_lives = m_levelManager.getInitialLives();
-				m_requiredPercentage = levelData.requiredPercentage;
-				
-				m_board.initializeBoard(levelData.enemyCount);
-				m_board.draw(m_window);
+		// handle player movement
+		handleKeyPressed(event.key.code, m_deltaTime);
 
-				m_player.setPosition(sf::Vector2f(100, 100));
-				isLoadNextLevel = false;
-			}
-		}
-		m_deltaTime = m_clock.restart();
-
-		// clear window with black color  
-		m_window.clear(sf::Color::Black);
 
 		// update the game state  
-		//update();
+		// update();
 		m_board.update(m_deltaTime);
-		handleKeyPressed(event.key.code, m_deltaTime);
 		handleCollisions();
+		updatePlayerOutlineColor();
+
 		if (m_lives <= 0) //if(m_player.getLives() <= 0)
 		{
-			isLoadNextLevel = true;
+			loadNextLevel(levelData);
 		}
 
 		// draw everything  
-		// draw();  
+		// draw();  		
+		m_window.clear(sf::Color::Black); // clear window with black color  
+		
+		handleStats();
 		m_board.draw(m_window);
 		m_player.getTrail().draw(m_window);
 		m_player.draw(m_window);
-		handleStats();
 
-		// end the current frame  
-		m_window.display();
+		m_window.display();// end the current frame  
 	}
+}
+
+void Controller::loadNextLevel(LevelData& levelData)
+{
+	m_levelManager.loadNextLevel(levelData);
+	m_lives = m_levelManager.getInitialLives();
+	m_requiredPercentage = levelData.requiredPercentage;
+
+	m_board.initializeBoard(levelData.enemyCount);
+	m_board.draw(m_window);
+
+	m_player.setPosition(m_player.getStartPosition());
 }
 
 void Controller::checkBoundries(GameObject& obj) const
 {
-	if (obj.getLocation().x >= m_board.getCols() * tileSize - tileSize  ||
-		obj.getLocation().y >= m_board.getRows() * tileSize - tileSize ||
-		obj.getLocation().x <= 0 ||
-		obj.getLocation().y <= 0)
+	if (obj.getPosition().x > m_board.getCols() * tileSize - tileSize  ||
+		obj.getPosition().y > m_board.getRows() * tileSize - tileSize ||
+		obj.getPosition().x < 0 ||
+		obj.getPosition().y < 0)
 	{
-		obj.setLocation(obj.getOldLocation());
+		obj.setPosition(obj.getOldLocation());
 	}
+}
+
+void Controller::updatePlayerOutlineColor()
+{
+	
+	Tile* tile = m_board.getTileAt(m_player.getPosition());
+	if (tile) {
+		std::cout << "player on tile type: " << static_cast<int>(tile->getType()) << std::endl;
+		if (tile && tile->getType() == TileType::Full) {
+			m_player.setOutlineColor(sf::Color::Black);
+		}
+		else {
+			m_player.setOutlineColor(sf::Color::White);
+		}
+	} else { std::cout << "player on tile type: nullptr" << std::endl; }
+}
+
+void Controller::handleEvents()
+{
 }
 
 void Controller::update()
@@ -112,8 +131,12 @@ void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 {
 	m_player.setDirection(keyCode);
 	m_player.move(deltaTime);
+	
+	if (keyCode == sf::Keyboard::R)
+		m_board.reset();
 }
 
+// draw game stats on the screen
 void Controller::handleStats()
 {
 	// handle stats here
@@ -160,10 +183,9 @@ void Controller::waitForSpace()
 
 void Controller::handleCollisions()
 {
+	checkBoundries(m_player);
 	for (auto& enemyPtr : m_board.getEnemies())
 		checkBoundries(*enemyPtr);
-	checkBoundries(m_player);
-	handleEnemyTileCollisions();
 
 	bool collided = false;
 	//checkPlayerGameBounds(m_player);
@@ -175,26 +197,46 @@ void Controller::handleCollisions()
 	}
 
 	// check for collisions between enemies and tiles
+	handleEnemyTileCollisions();
 }
 
 
 // Check for collisions between enemies and tiles  
 void Controller::handleEnemyTileCollisions()  
-{  
-    for (auto& enemyPtr : m_board.getEnemies())  
-    {  
-       auto& enemy = *enemyPtr;  
-       for (const auto& [pos, tilePtr] : m_board.getTiles())  
-       {  
-           // Check if the tile is a FullTile before handling collision  
-           if (dynamic_cast<FullTile*>(tilePtr.get()) && enemy.getGlobalBounds().intersects(tilePtr->getGlobalBounds()))  
-           {  
-               // Let the enemy handle the collision with the FullTile  
-               enemy.handleCollision(*tilePtr);  
-               break; // Only handle one tile per frame
-           }  
-       }  
-    }
+{
+	for (auto& enemyPtr : m_board.getEnemies())
+	{
+		auto& enemy = *enemyPtr;
+
+		sf::FloatRect bounds = enemy.getGlobalBounds();
+		int rows = m_board.getRows();
+		int cols = m_board.getCols();
+
+		bool collisionHandled = false;
+		{
+			// Convert pixel coordinates to tile indices
+			int left = std::max(0, static_cast<int>(bounds.left / tileSize));
+			int right = std::min(cols - 1, static_cast<int>((bounds.left + bounds.width) / tileSize));
+			int top = std::max(0, static_cast<int>(bounds.top / tileSize));
+			int bottom = std::min(rows - 1, static_cast<int>((bounds.top + bounds.height) / tileSize));
+
+			// Iterate over the tiles in the bounding box of the enemy
+			for (int row = top; row <= bottom && !collisionHandled; ++row) {
+				for (int col = left; col <= right && !collisionHandled; ++col) {
+					auto it = m_board.find({ row, col });
+					if (it != m_board.end()) {
+						Tile* tilePtr = it->second.get();
+						// Check if the tile is a FullTile before handling collision  
+						if (dynamic_cast<FullTile*>(tilePtr) && enemy.getGlobalBounds().intersects(tilePtr->getGlobalBounds())) {
+
+							enemy.handleCollision(*tilePtr);
+							collisionHandled = true;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 

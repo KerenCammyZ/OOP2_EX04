@@ -6,6 +6,7 @@ Player::Player()
 {
 	m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(tileSize, tileSize));
 	setColor(sf::Color::Magenta);
+	setOutlineColor(sf::Color::Black);
 	setPosition(sf::Vector2f(0, 0));
 	m_lives = 3;
 }
@@ -37,6 +38,7 @@ void Player::setDirection(sf::Keyboard::Key keyCode)
 			m_direction = sf::Vector2f(0, 0);
 		}
 }
+
 
 //void Player::removeLife()
 //{

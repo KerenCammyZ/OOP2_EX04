@@ -10,10 +10,8 @@ class Tile;
 class GameObject 
 {
 public:
-	//constructor and destructor
-	// TODO: possibly define Constructor delegation
 	GameObject();
-	explicit GameObject(std::unique_ptr<sf::Shape> shape); // add constructor delegation
+	explicit GameObject(std::unique_ptr<sf::Shape> shape);
 	GameObject(const sf::Vector2f& position, std::unique_ptr<sf::Shape> shape);
 	virtual ~GameObject() {};
 	//copy constructor and assignment operator 
@@ -25,16 +23,16 @@ public:
 	//virtual void handleInput(int key, int action) = 0;
 
 	//setters and getters
-	sf::Vector2f getLocation() const;
-	sf::Vector2f getOldLocation() const;
-	sf::FloatRect getGlobalBounds() const;
+	sf::Vector2f getPosition() const;
 	sf::Vector2f getStartPosition() const;
+	sf::Vector2f getOldLocation() const;
 	sf::Shape& getShape() const;
+	sf::FloatRect getGlobalBounds() const;
 
 	void setColor(const sf::Color& color);
-	void setPosition(sf::Vector2f position);
-	void setStartPosition();
-	void setLocation(const sf::Vector2f& position);
+	void setOutlineColor(const sf::Color& color);
+	void setPosition(const sf::Vector2f& position);
+	void setStartPosition(const sf::Vector2f& position);
 	void setOldPosition(const sf::Vector2f& position);
 
 	//handle collision with other game objects
@@ -51,6 +49,5 @@ protected:
 	sf::Vector2f m_startPosition;
 	sf::Vector2f m_position;
 	
-	//sf::RectangleShape m_shape;
 	std::unique_ptr<sf::Shape> m_shape;
 };

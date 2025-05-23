@@ -15,12 +15,15 @@ public:
    ~Controller() = default;  
    void run();
    void checkBoundries(GameObject& obj) const;
+   void updatePlayerOutlineColor();
+   void handleEvents();
    void update();
    void draw();  
    void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);  
    void handleStats();
 
    void waitForSpace();
+   void loadNextLevel(LevelData& levelData);
 
    void handleCollisions();
    void handleEnemyTileCollisions();
