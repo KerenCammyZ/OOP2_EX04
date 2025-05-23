@@ -32,6 +32,8 @@ public:
     void draw(sf::RenderWindow& window) const;
     void update(sf::Time deltaTime) const;
 
+    void setTile(int row, int col, std::unique_ptr<Tile> tile);
+
     void reset(); // reset board (for testing enemy movement)
     
     int getRows() const { return m_rows; }

@@ -44,14 +44,14 @@ void Enemy::handleCollision(Tile& fullTile)
 		if (overlapLeft < overlapRight) {
 			// Collision from the left side of the tile
 			setPosition(sf::Vector2f(tileBounds.left - enemyBounds.width, getLocation().y));
-			std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
-			std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
+			//std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
+			//std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
 		}
 		else {
 			// Collision from the right side of the tile
 			setPosition(sf::Vector2f(tileBounds.left + tileBounds.width, getLocation().y));
-			std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
-			std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
+			//::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
+			//std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
 		}
 		// Reverse horizontal direction
 		m_direction.x = -m_direction.x;
@@ -61,14 +61,14 @@ void Enemy::handleCollision(Tile& fullTile)
 		if (overlapTop < overlapBottom) {
 			// Collision from the top side of the tile
 			setPosition(sf::Vector2f(getLocation().x, tileBounds.top - enemyBounds.height));
-			std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
-			std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
+			//std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
+			//std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
 		}
 		else {
 			// Collision from the bottom side of the tile
 			setPosition(sf::Vector2f(getLocation().x, tileBounds.top + tileBounds.height));
-			std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
-			std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
+			//std::cout << "Enemy collided at " << getLocation().x << getLocation().y << std::endl;
+			//std::cout << "Enemy direction " << getDirection().x << getDirection().y << std::endl;
 		}
 		// Reverse vertical direction
 		m_direction.y = -m_direction.y;
