@@ -137,6 +137,7 @@ bool Board::isFilledTile(int row, int col) const
     return false; // Out of bounds considered not filled
 }
 
+
 // Iterator support methods
 Board::iterator Board::find(const std::pair<int, int>& key)
 {

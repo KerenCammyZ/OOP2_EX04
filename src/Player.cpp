@@ -89,7 +89,8 @@ void Player::move(sf::Time deltaTime)
 	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());  
 	setPosition(m_shape->getPosition());  
 
-	auto tile = std::make_shared<Tile>(m_shape->getPosition().x, m_shape->getPosition().y, sf::Color::Magenta);  
-	tile->setPosition(m_shape->getPosition());  
-	m_trail.addTile(tile);
+	// Add a tile to the trail at the current position
+	// 
+	//  -- moved code to Controller::updatePlayerState()
+	
 }

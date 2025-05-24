@@ -56,7 +56,6 @@ public:
     int getCols() const { return m_cols; }
 	const Enemies& getEnemies() const { return m_enemies; }
     const TileMap& getTiles() const { return m_board; }
-    //float getFilledPercentage() const;
     
 
 private:

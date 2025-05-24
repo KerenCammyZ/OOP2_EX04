@@ -19,6 +19,10 @@ Controller::Controller()
 	}
 	sf::Vector2u windowSize = m_levelManager.getWindowSize();
 
+	if (!m_font.loadFromFile("arial.ttf")) {
+		throw std::runtime_error("Failed to load font file: arial.ttf");
+	}
+
 	// Update the window size based on the data read from the file
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
 	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
@@ -40,6 +44,9 @@ void Controller::run()
 	while (m_window.isOpen())
 	{
 		m_deltaTime = m_clock.restart();
+
+		if (m_deltaTime.asSeconds() > 0.1f) // Limit deltaTime to avoid too fast updates
+			m_deltaTime = sf::seconds(0.016f);
 		
 		// handle input  
 		// handleEvents()
@@ -128,15 +135,12 @@ void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 void Controller::handleStats()
 {
 	// handle stats here
-	// draw lives, score, etc...
-	sf::Font font;
-	if (!font.loadFromFile("arial.ttf")) {
-		throw std::runtime_error("Failed to load font file: arial.ttf");
-	}
+	// draw lives, score, etc...	
 	int remainingLives = m_player.getLives();
-	sf::Text lives("Lives: " + std::to_string(remainingLives), font, 30);
+	sf::Text lives("Lives: " + std::to_string(remainingLives), m_font, 30);
 	lives.setFillColor(sf::Color::White);
 	lives.setPosition(10, m_window.getSize().y - 35);
+
 	m_window.draw(lives);
 }
 
@@ -157,10 +161,7 @@ void Controller::waitForSpace()
 		
 		// draw a "Press Space to Start" message here
 		sf::Font font;
-		if (!font.loadFromFile("arial.ttf")) {
-			throw std::runtime_error("Failed to load font file: arial.ttf");
-		}
-		sf::Text text("Press Space to Start", font, 30);
+		sf::Text text("Press Space to Start", m_font, 30);
 		text.setFillColor(sf::Color::White);
 		text.setPosition(m_window.getSize().x / 2 - text.getGlobalBounds().width / 2,
 			m_window.getSize().y / 2 - text.getGlobalBounds().height / 2);
@@ -263,6 +264,17 @@ void Controller::updatePlayerState()
 	if (m_player.checkTrailCompleted(tile->getType())) {
 		std::cout << "Trail completed!" << std::endl;
 		claimTerritory();
+	}
+
+	// Add a new tile to the player's trail 
+	if (tile && tile->getType() == TileType::Empty) {
+		auto trailTile = std::make_shared<Tile>(
+			m_player.getPosition().x,
+			m_player.getPosition().y,
+			sf::Color::Magenta
+		);
+		trailTile->setPosition(m_player.getPosition());
+		m_player.getTrail().addTile(trailTile);
 	}
 }
 
