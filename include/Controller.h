@@ -24,6 +24,7 @@ public:
    void handleStats();
 
    void waitScreen(const std::string& displayMessage);
+   void showLevelCompleteScreen();
    void loadNextLevel(LevelData& levelData);
    void claimTerritory();
 

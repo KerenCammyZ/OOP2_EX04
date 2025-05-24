@@ -32,6 +32,7 @@ Controller::Controller()
 
 	m_board = Board(rows, cols); // leave 4 tileSize space on bottom for stats
 	m_player.setStartPosition(sf::Vector2f(cols / 2 - tileSize, 0));
+	m_player.setLives(m_levelManager.getInitialLives());
 }
 
 
@@ -73,7 +74,15 @@ void Controller::update(LevelData& levelData)
 	handleCollisions();
 	updatePlayerState();
 
-	if (m_player.getLives() <= 0)
+	int filledPercentage = static_cast<int>(m_board.getFilledPercentage() * 100);
+	if (filledPercentage >= m_requiredPercentage)
+	{
+		showLevelCompleteScreen();
+		loadNextLevel(levelData);
+		return;
+	}
+
+	if (m_player.getLives() < 0)
 	{
 		m_running = false;
 		waitScreen("Game Over!");
@@ -103,7 +112,7 @@ void Controller::loadNextLevel(LevelData& levelData)
 	sf::Vector2f startPosition = m_player.getStartPosition();
 	m_levelManager.loadNextLevel(levelData);
 	m_player.setPosition(startPosition);
-	m_player.setLives(m_levelManager.getInitialLives());
+	//m_player.setLives(m_levelManager.getInitialLives());
 	m_requiredPercentage = levelData.requiredPercentage;
 
 	m_board.initializeBoard(levelData.enemyCount);
@@ -129,17 +138,38 @@ void Controller::handleStats()
 	int remainingLives = m_player.getLives();
 	int filledPercentage = static_cast<int>(m_board.getFilledPercentage() * 100);
 	int requiredPercentage = m_requiredPercentage;
-	int livesSize = 24;
+	int livesSize = 20;
+	int scoreSize = 18;
 	float margin = 10.f;
+	float verticalSpacing = 18.f;
 
-	// Lives text (bold "Lives:")
 	sf::Text lives;
 	lives.setFont(m_font);
 	lives.setString("Lives: " + std::to_string(remainingLives));
 	lives.setCharacterSize(livesSize);
-	lives.setFillColor(sf::Color::Yellow);
-	//lives.setStyle(sf::Text::Bold);
 	lives.setPosition(margin, m_window.getSize().y - 2 * (livesSize + margin));
+
+	// Lives are colored Red when player has no more left
+	if (m_player.getLives() == 0)
+	{
+		lives.setFillColor(sf::Color::Red);
+		lives.setStyle(sf::Text::Bold);
+	} 
+	else {
+		lives.setFillColor(sf::Color::Yellow);
+	}
+	
+	// Score text
+	sf::Text scoreText;
+	scoreText.setFont(m_font);
+	scoreText.setString("Score: " + std::to_string(m_score));
+	scoreText.setCharacterSize(scoreSize);
+	scoreText.setFillColor(sf::Color::Cyan);
+
+	scoreText.setPosition(
+		lives.getPosition().x,
+		lives.getPosition().y + lives.getLocalBounds().height + 8.f
+	);
 
 	// Progress bar dimensions
 	float barWidth = 300.f;
@@ -169,21 +199,23 @@ void Controller::handleStats()
 	progressText.setFillColor(sf::Color::White);
 	progressText.setOutlineColor(sf::Color::Black);
 	progressText.setOutlineThickness(2.f);
+
 	sf::FloatRect textRect = progressText.getLocalBounds();
 	progressText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 	progressText.setPosition(barX + barWidth / 2.f, barY + barHeight / 2.f);
 
 	// Draw to window
 	m_window.draw(lives);
+	m_window.draw(scoreText);
 	m_window.draw(barBorderRect);
 	m_window.draw(barFillRect);
 	m_window.draw(progressText);
 }
 
+
 // wait for user to press spacebar before starting the game
 void Controller::waitScreen(const std::string& displayMessage)
 {
-	
 	while (m_window.isOpen() && !m_running)
 	{
 		sf::Event event;
@@ -288,7 +320,6 @@ void Controller::updatePlayerState()
 	}
 
 	if (m_player.checkTrailCompleted(tile->getType())) {
-		std::cout << "Trail completed!" << std::endl;
 		claimTerritory();
 	}
 
@@ -375,6 +406,8 @@ bool Controller::regionContainsEnemy(const std::vector<std::pair<int, int>>& reg
 
 void Controller::claimTerritory()
 {
+	float prevPercenatge = m_board.getFilledPercentage();
+
 	// Convert trail to filled tiles
 	const auto& trailTiles = m_player.getTrail().getTiles();
 
@@ -389,8 +422,6 @@ void Controller::claimTerritory()
 	// Find all empty regions
 	auto regions = findEmptyRegions();
 
-	// Fill regions that don't contain enemies
-	int filledRegions = 0;
 	for (size_t i = 0; i < regions.size(); ++i) {
 		bool hasEnemy = regionContainsEnemy(regions[i]);
 		if (!hasEnemy) {
@@ -398,8 +429,27 @@ void Controller::claimTerritory()
 			for (const auto& [row, col] : regions[i]) {
 				m_board.setTile(row, col, std::make_unique<FullTile>());
 			}
-			filledRegions++;
-			
 		}
 	}
+	float updatedPercentage = m_board.getFilledPercentage();
+	int pointsPerPercent = 10;
+	int percentCovered = static_cast<int>((updatedPercentage - prevPercenatge) * 100);
+	m_score += percentCovered * pointsPerPercent + 1;
+}
+
+void Controller::showLevelCompleteScreen()
+{
+	m_window.clear(sf::Color::Black);
+	sf::Text msgText("Level Complete!", m_font, 36);
+	msgText.setFillColor(sf::Color::Green);
+	msgText.setStyle(sf::Text::Bold);
+	msgText.setPosition(
+		m_window.getSize().x / 2 - msgText.getGlobalBounds().width / 2,
+		m_window.getSize().y / 2 - msgText.getGlobalBounds().height / 2
+	);
+	m_window.draw(msgText);
+	m_window.display();
+
+	// Pause for 2 seconds
+	sf::sleep(sf::seconds(2));
 }
