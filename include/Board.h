@@ -39,9 +39,9 @@ public:
     void setTile(int row, int col, std::unique_ptr<Tile> tile);
     Tile* getTileAt(const sf::Vector2f& position) const;
 
-    void reset(); // reset board
-    //void claimTerritory(const std::vector<std::shared_ptr<Tile>>& trail);
     bool isFilledTile(int row, int col) const;
+
+    float getFilledPercentage() const;
     
     // Add iterator support      
     using iterator = TileMap::iterator;

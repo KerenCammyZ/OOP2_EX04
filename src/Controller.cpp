@@ -18,28 +18,28 @@ Controller::Controller()
 	if (!m_levelManager.initialize()) {
 		throw std::runtime_error("Failed to initialize level manager");
 	}
-	sf::Vector2u windowSize = m_levelManager.getWindowSize();
 
 	if (!m_font.loadFromFile("arial.ttf")) {
 		throw std::runtime_error("Failed to load font file: arial.ttf");
 	}
 
 	// Update the window size based on the data read from the file
+	sf::Vector2u windowSize = m_levelManager.getWindowSize();
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
-	std::cout << "Window size: " << m_window.getSize().x << "x" << m_window.getSize().y << std::endl;
 
 	int rows = m_window.getSize().y / tileSize - 4;
 	int cols = m_window.getSize().x / tileSize;
+
 	m_board = Board(rows, cols); // leave 4 tileSize space on bottom for stats
+	m_player.setStartPosition(sf::Vector2f(cols / 2 - tileSize, 0));
 }
 
 
 void Controller::run()
 {
 	LevelData levelData;
-	m_player.setStartPosition(sf::Vector2f(100, 100));
-	m_player.setOldPosition(m_player.getStartPosition());
-	waitForSpace(); // Wait for space key to be pressed before starting the game  
+	
+    waitScreen(std::string("Press Space to Start")); // Pass a temporary std::string object
 	loadNextLevel(levelData); // Load the first level
 
 	while (m_window.isOpen())
@@ -49,47 +49,60 @@ void Controller::run()
 		if (m_deltaTime.asSeconds() > 0.1f) // Limit deltaTime to avoid too fast updates
 			m_deltaTime = sf::seconds(0.016f);
 		
-		// handle input  
-		// handleEvents()
-		sf::Event event;
-		while (m_window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				m_window.close();
-		}
-		// handle player movement
-		handleKeyPressed(event.key.code, m_deltaTime);
-		// --
-
-		// update the game state  
-		// update();
-		m_board.update(m_deltaTime);
-		handleCollisions();
-		updatePlayerState();
-
-		if (m_player.getLives() <= 0)
-		{
-			loadNextLevel(levelData);
-		}
-		// --
-
-		// draw everything  
-		// draw();  		
-		m_window.clear(sf::Color::Black); // clear window with black color  
-		
-		handleStats();
-		m_board.draw(m_window);
-		m_player.getTrail().draw(m_window);
-		m_player.draw(m_window);
-
-		m_window.display();// end the current frame  
-		// --
+		handleEvents();
+		update(levelData);
+		draw();
 	}
+}
+
+void Controller::handleEvents()
+{
+	sf::Event event;
+	while (m_window.pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed)
+			m_window.close();
+	}
+	// React to key presses for player movement
+	handleKeyPressed(event.key.code, m_deltaTime);
+}
+
+void Controller::update(LevelData& levelData)
+{
+	m_board.update(m_deltaTime);
+	handleCollisions();
+	updatePlayerState();
+
+	if (m_player.getLives() <= 0)
+	{
+		m_running = false;
+		waitScreen("Game Over!");
+	}
+}
+
+void Controller::draw()
+{
+	m_window.clear(sf::Color::Black);
+
+	handleStats();
+	m_board.draw(m_window);
+	m_player.getTrail().draw(m_window);
+	m_player.draw(m_window);
+
+	m_window.display();
+}
+
+void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
+{
+	m_player.setDirection(keyCode);
+	m_player.move(deltaTime);
 }
 
 void Controller::loadNextLevel(LevelData& levelData)
 {
+	sf::Vector2f startPosition = m_player.getStartPosition();
 	m_levelManager.loadNextLevel(levelData);
+	m_player.setPosition(startPosition);
 	m_player.setLives(m_levelManager.getInitialLives());
 	m_requiredPercentage = levelData.requiredPercentage;
 
@@ -110,44 +123,67 @@ void Controller::checkBoundries(GameObject& obj) const
 	}
 }
 
-
-void Controller::handleEvents()
-{
-}
-
-void Controller::update()
-{
-}
-
-void Controller::draw()
-{
-}
-
-void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
-{
-	m_player.setDirection(keyCode);
-	m_player.move(deltaTime);
-	
-	if (keyCode == sf::Keyboard::R)
-		m_board.reset();
-}
-
 // draw game stats on the screen
 void Controller::handleStats()
 {
-	// handle stats here
-	// draw lives, score, etc...	
 	int remainingLives = m_player.getLives();
-	sf::Text lives("Lives: " + std::to_string(remainingLives), m_font, 30);
-	lives.setFillColor(sf::Color::White);
-	lives.setPosition(10, m_window.getSize().y - 35);
+	int filledPercentage = static_cast<int>(m_board.getFilledPercentage() * 100);
+	int requiredPercentage = m_requiredPercentage;
+	int livesSize = 24;
+	float margin = 10.f;
 
+	// Lives text (bold "Lives:")
+	sf::Text lives;
+	lives.setFont(m_font);
+	lives.setString("Lives: " + std::to_string(remainingLives));
+	lives.setCharacterSize(livesSize);
+	lives.setFillColor(sf::Color::Yellow);
+	//lives.setStyle(sf::Text::Bold);
+	lives.setPosition(margin, m_window.getSize().y - 2 * (livesSize + margin));
+
+	// Progress bar dimensions
+	float barWidth = 300.f;
+	float barHeight = 32.f;
+	float barBorder = 4.f;
+	float barX = (m_window.getSize().x - barWidth) / 2.f;
+	float barY = m_window.getSize().y - barHeight - 2 * margin;
+
+	// Border rectangle (empty bar)
+	sf::RectangleShape barBorderRect(sf::Vector2f(barWidth, barHeight));
+	barBorderRect.setPosition(barX, barY);
+	barBorderRect.setFillColor(sf::Color::Transparent);
+	barBorderRect.setOutlineThickness(barBorder);
+	barBorderRect.setOutlineColor(sf::Color::White);
+
+	// Filled rectangle (progress)
+	float fillWidth = (filledPercentage / 100.f) * barWidth;
+	sf::RectangleShape barFillRect(sf::Vector2f(fillWidth, barHeight));
+	barFillRect.setPosition(barX, barY);
+	barFillRect.setFillColor(sf::Color::Green);
+
+	// Progress text (centered in bar)
+	sf::Text progressText;
+	progressText.setFont(m_font);
+	progressText.setString(std::to_string(filledPercentage) + " / " + std::to_string(requiredPercentage) + "%");
+	progressText.setCharacterSize(18);
+	progressText.setFillColor(sf::Color::White);
+	progressText.setOutlineColor(sf::Color::Black);
+	progressText.setOutlineThickness(2.f);
+	sf::FloatRect textRect = progressText.getLocalBounds();
+	progressText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+	progressText.setPosition(barX + barWidth / 2.f, barY + barHeight / 2.f);
+
+	// Draw to window
 	m_window.draw(lives);
+	m_window.draw(barBorderRect);
+	m_window.draw(barFillRect);
+	m_window.draw(progressText);
 }
 
 // wait for user to press spacebar before starting the game
-void Controller::waitForSpace()
+void Controller::waitScreen(const std::string& displayMessage)
 {
+	
 	while (m_window.isOpen() && !m_running)
 	{
 		sf::Event event;
@@ -159,14 +195,11 @@ void Controller::waitForSpace()
 				m_running = true;
 		}
 		m_window.clear(sf::Color::Black);
-		
-		// draw a "Press Space to Start" message here
-		sf::Font font;
-		sf::Text text("Press Space to Start", m_font, 30);
-		text.setFillColor(sf::Color::White);
-		text.setPosition(m_window.getSize().x / 2 - text.getGlobalBounds().width / 2,
-			m_window.getSize().y / 2 - text.getGlobalBounds().height / 2);
-		m_window.draw(text);
+		sf::Text msgText(displayMessage, m_font, 30);
+		msgText.setFillColor(sf::Color::White);
+		msgText.setPosition(m_window.getSize().x / 2 - msgText.getGlobalBounds().width / 2,
+			m_window.getSize().y / 2 - msgText.getGlobalBounds().height / 2);
+		m_window.draw(msgText);
 		m_window.display();
 	}
 }
@@ -201,14 +234,6 @@ void Controller::handleCollisions()
 			break;
 		}
 	}
-	bool collided = false;
-	//checkPlayerGameBounds(m_player);
-
-	if (collided)
-	{
-		// lose life, respawn, etc...
-	}
-
 	handleFullTileEnemyCollisions();
 }
 
@@ -350,11 +375,8 @@ bool Controller::regionContainsEnemy(const std::vector<std::pair<int, int>>& reg
 
 void Controller::claimTerritory()
 {
-	std::cout << "=== CLAIM TERRITORY CALLED ===" << std::endl;
-
-	// Convert trail to filled tiles (your existing code)
+	// Convert trail to filled tiles
 	const auto& trailTiles = m_player.getTrail().getTiles();
-	std::cout << "Trail has " << trailTiles.size() << " tiles" << std::endl;
 
 	for (const auto& trailTile : trailTiles) {
 		sf::Vector2f pos = trailTile->getPosition();
@@ -366,23 +388,18 @@ void Controller::claimTerritory()
 
 	// Find all empty regions
 	auto regions = findEmptyRegions();
-	std::cout << "Found " << regions.size() << " empty regions" << std::endl;
 
 	// Fill regions that don't contain enemies
 	int filledRegions = 0;
 	for (size_t i = 0; i < regions.size(); ++i) {
 		bool hasEnemy = regionContainsEnemy(regions[i]);
-		std::cout << "Region " << i << " (size " << regions[i].size() << ") has enemy: " << (hasEnemy ? "YES" : "NO") << std::endl;
-
 		if (!hasEnemy) {
 			// Fill this region!
 			for (const auto& [row, col] : regions[i]) {
 				m_board.setTile(row, col, std::make_unique<FullTile>());
 			}
 			filledRegions++;
-			std::cout << "Filled region " << i << std::endl;
+			
 		}
 	}
-
-	std::cout << "Filled " << filledRegions << " regions without enemies" << std::endl;
 }
