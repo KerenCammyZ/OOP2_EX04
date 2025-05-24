@@ -54,11 +54,22 @@ void Player::setLives(int life)
 	m_lives = life;
 }
 
+bool Player::checkTrailCompleted(TileType currentTileType)
+{
+	bool wasOnEmpty = m_OnEmptyTile;
+	bool nowOnFilled = (currentTileType == TileType::Full);
+
+	m_OnEmptyTile = (currentTileType != TileType::Full);
+	return (wasOnEmpty && nowOnFilled);
+
+}
+
 void Player::handleCollision(Enemy& enemy)
 {
 	removeLife();
 	setPosition(getStartPosition());
 	getTrail().clearTrail();
+	m_OnEmptyTile = false;
 }
 
 

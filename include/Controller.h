@@ -15,7 +15,7 @@ public:
    ~Controller() = default;  
    void run();
    void checkBoundries(GameObject& obj) const;
-   void updatePlayerOutlineColor();
+   void updatePlayerState();
    void handleEvents();
    void update();
    void draw();  

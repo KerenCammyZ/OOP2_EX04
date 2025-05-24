@@ -57,7 +57,7 @@ void Controller::run()
 		// update();
 		m_board.update(m_deltaTime);
 		handleCollisions();
-		updatePlayerOutlineColor();
+		updatePlayerState();
 
 		if (m_player.getLives() <= 0)
 		{
@@ -249,18 +249,18 @@ void Controller::handleFullTileEnemyCollisions()
 	}
 }
 
-// Check if the player is on a filled tile and update outline color accordingly
-void Controller::updatePlayerOutlineColor()
+// Check if the player is on a filled tile and update state accordingly
+void Controller::updatePlayerState()
 {
-	
 	Tile* tile = m_board.getTileAt(m_player.getPosition());
-	if (tile) {
-		std::cout << "player on tile type: " << static_cast<int>(tile->getType()) << std::endl;
-		if (tile && tile->getType() == TileType::Full) {
-			m_player.setOutlineColor(sf::Color::Black);
-		}
-		else {
-			m_player.setOutlineColor(sf::Color::White);
-		}
-	} else { std::cout << "player on tile type: nullptr" << std::endl; }
+	if (tile->getType() == TileType::Full) {
+		m_player.setOutlineColor(sf::Color::Black);
+	}
+	else {
+		m_player.setOutlineColor(sf::Color::White);
+	}
+
+	if (m_player.checkTrailCompleted(tile->getType())) {
+		std::cout << "Trail completed!" << std::endl;
+	}
 }

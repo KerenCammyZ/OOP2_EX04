@@ -15,6 +15,7 @@ public:
 	int getLives();
 	void setLives(int life);
 	Trail& getTrail() { return m_trail; }
+	bool checkTrailCompleted(TileType currentTileType);
 
 	virtual void handleCollision(Enemy& enemy) override;
 	virtual void handleCollision(GameObject& unknownObj) override {};
@@ -31,5 +32,6 @@ private:
 	float m_speed = 300.f;
 
 	Trail m_trail;
+	bool m_OnEmptyTile{ false };
 	//bool m_onFilledTile = true;
 };
