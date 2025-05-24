@@ -262,5 +262,33 @@ void Controller::updatePlayerState()
 
 	if (m_player.checkTrailCompleted(tile->getType())) {
 		std::cout << "Trail completed!" << std::endl;
+		claimTerritory();
 	}
+}
+
+void Controller::claimTerritory()
+{
+	std::cout << "Claiming territory..." << std::endl;
+
+	// Get the trail tiles
+	const auto& trailTiles = m_player.getTrail().getTiles();
+
+	// Convert each trail tile position to a filled tile on the board
+	for (const auto& trailTile : trailTiles)
+	{
+		// Get trail tile position
+		sf::Vector2f pos = trailTile->getPosition();
+
+		// Convert pixel position to grid coordinates
+		int row = static_cast<int>(pos.y) / tileSize;
+		int col = static_cast<int>(pos.x) / tileSize;
+
+		// Replace empty tile with filled tile
+		m_board.setTile(row, col, std::make_unique<FullTile>());
+	}
+
+	// Clear the trail since it's now part of the board
+	m_player.getTrail().clearTrail();
+
+	std::cout << "Territory claimed!" << std::endl;
 }

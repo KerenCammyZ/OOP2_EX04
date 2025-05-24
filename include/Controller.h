@@ -24,6 +24,7 @@ public:
 
    void waitForSpace();
    void loadNextLevel(LevelData& levelData);
+   void claimTerritory();
    //bool checkTrailCompleted();
    //bool checkPlayerTileTransition();
 
@@ -44,7 +45,7 @@ private:
    bool m_running{ false };  // defines game state
    int m_requiredPercentage{50};  // required to complete level
    //int m_percentageFilled = 0;
-   //bool m_playerOnFilledTile{ true };
+
 
    sf::Time m_deltaTime;  
    sf::Clock m_clock;
