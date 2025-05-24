@@ -179,6 +179,8 @@ void Controller::handleCollisions()
 		// ememy-boundries collision
 		checkBoundries(*enemy);
 
+		bool trailHit = false;
+
 		// check for collisions between player and enemy
 		for (const auto& trailTile : m_player.getTrail().getTiles())
 		{		
@@ -186,14 +188,15 @@ void Controller::handleCollisions()
 			if (enemy->checkCollision(*trailTile))
 			{
 				m_player.handleCollision(*enemy);
+				trailHit = true;
 				break;
-			}
-			// player-enemy collision
-			if (m_player.checkCollision(*enemy))
-			{
-				m_player.handleCollision(*enemy);
-				break;
-			}
+			}		
+		}
+		// player-enemy collision
+		if (!trailHit && m_player.checkCollision(*enemy))
+		{
+			m_player.handleCollision(*enemy);
+			break;
 		}
 	}
 	bool collided = false;
@@ -204,13 +207,12 @@ void Controller::handleCollisions()
 		// lose life, respawn, etc...
 	}
 
-	// check for collisions between enemies and tiles
-	handleEnemyTileCollisions();
+	handleFullTileEnemyCollisions();
 }
 
 
 // Check for collisions between enemies and tiles  
-void Controller::handleEnemyTileCollisions()  
+void Controller::handleFullTileEnemyCollisions()  
 {
 	for (auto& enemyPtr : m_board.getEnemies())
 	{

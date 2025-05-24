@@ -28,7 +28,7 @@ public:
    //bool checkPlayerTileTransition();
 
    void handleCollisions();
-   void handleEnemyTileCollisions();
+   void handleFullTileEnemyCollisions();
    virtual void handleCollision(GameObject& unknownObj) {};
    virtual void handleCollision(Enemy& enemy) {};
    virtual void handleCollision(Player& player) {};
