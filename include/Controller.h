@@ -7,6 +7,7 @@
 #include <SFML/Window.hpp>  
 #include <SFML/Graphics.hpp>  
 #include <iostream>  
+#include <set>
 
 class Controller  
 {  
@@ -38,6 +39,9 @@ private:
    Player m_player;  
    LevelManager m_levelManager;  
    sf::RenderWindow m_window;
+   std::vector<std::vector<std::pair<int, int>>> findEmptyRegions();
+   std::vector<std::pair<int, int>> exploreRegion(int startRow, int startCol, std::set<std::pair<int, int>>& visited);
+   bool regionContainsEnemy(const std::vector<std::pair<int, int>>& region);
 
    //int m_lives{3}; // get set from Player
    bool m_running{ false };  // defines game state

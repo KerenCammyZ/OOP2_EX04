@@ -1,11 +1,12 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <string>
-#include <algorithm>  // std::min, std::max
+#include <algorithm>
 #include "Controller.h"
 #include "GameObject.h"
 #include "GlobalSizes.h"
-
+#include <set>
+#include <queue>
 
 Controller::Controller()
 	:
@@ -278,29 +279,110 @@ void Controller::updatePlayerState()
 	}
 }
 
-void Controller::claimTerritory()
+
+std::vector<std::vector<std::pair<int, int>>> Controller::findEmptyRegions()
 {
-	std::cout << "Claiming territory..." << std::endl;
+	std::vector<std::vector<std::pair<int, int>>> regions;
+	std::set<std::pair<int, int>> visited;
 
-	// Get the trail tiles
-	const auto& trailTiles = m_player.getTrail().getTiles();
-
-	// Convert each trail tile position to a filled tile on the board
-	for (const auto& trailTile : trailTiles)
-	{
-		// Get trail tile position
-		sf::Vector2f pos = trailTile->getPosition();
-
-		// Convert pixel position to grid coordinates
-		int row = static_cast<int>(pos.y) / tileSize;
-		int col = static_cast<int>(pos.x) / tileSize;
-
-		// Replace empty tile with filled tile
-		m_board.setTile(row, col, std::make_unique<FullTile>());
+	// Find all empty tiles and group them into connected regions
+	for (int row = 2; row < m_board.getRows() - 2; ++row) {
+		for (int col = 2; col < m_board.getCols() - 2; ++col) {
+			if (!m_board.isFilledTile(row, col) && visited.find({ row, col }) == visited.end()) {
+				// Found unvisited empty tile - explore its region
+				std::vector<std::pair<int, int>> region = exploreRegion(row, col, visited);
+				if (!region.empty()) {
+					regions.push_back(region);
+				}
+			}
+		}
 	}
 
-	// Clear the trail since it's now part of the board
+	return regions;
+}
+
+std::vector<std::pair<int, int>> Controller::exploreRegion(int startRow, int startCol, std::set<std::pair<int, int>>& visited)
+{
+	std::vector<std::pair<int, int>> region;
+	std::queue<std::pair<int, int>> toExplore;
+
+	toExplore.push({ startRow, startCol });
+
+	while (!toExplore.empty()) {
+		auto [row, col] = toExplore.front();
+		toExplore.pop();
+
+		// Skip if already visited or out of bounds
+		if (visited.find({ row, col }) != visited.end()) continue;
+		if (row < 2 || row >= m_board.getRows() - 2 || col < 2 || col >= m_board.getCols() - 2) continue;
+		if (m_board.isFilledTile(row, col)) continue;
+
+		// Add to region and mark as visited
+		visited.insert({ row, col });
+		region.push_back({ row, col });
+
+		// Add neighbors to explore
+		toExplore.push({ row - 1, col });
+		toExplore.push({ row + 1, col });
+		toExplore.push({ row, col - 1 });
+		toExplore.push({ row, col + 1 });
+	}
+
+	return region;
+}
+
+bool Controller::regionContainsEnemy(const std::vector<std::pair<int, int>>& region)
+{
+	for (const auto& enemyPtr : m_board.getEnemies()) {
+		sf::Vector2f enemyPos = enemyPtr->getPosition();
+		int enemyRow = static_cast<int>(enemyPos.y) / tileSize;
+		int enemyCol = static_cast<int>(enemyPos.x) / tileSize;
+
+		// Check if enemy is in this region
+		for (const auto& [row, col] : region) {
+			if (enemyRow == row && enemyCol == col) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void Controller::claimTerritory()
+{
+	std::cout << "=== CLAIM TERRITORY CALLED ===" << std::endl;
+
+	// Convert trail to filled tiles (your existing code)
+	const auto& trailTiles = m_player.getTrail().getTiles();
+	std::cout << "Trail has " << trailTiles.size() << " tiles" << std::endl;
+
+	for (const auto& trailTile : trailTiles) {
+		sf::Vector2f pos = trailTile->getPosition();
+		int row = static_cast<int>(pos.y) / tileSize;
+		int col = static_cast<int>(pos.x) / tileSize;
+		m_board.setTile(row, col, std::make_unique<FullTile>());
+	}
 	m_player.getTrail().clearTrail();
 
-	std::cout << "Territory claimed!" << std::endl;
+	// Find all empty regions
+	auto regions = findEmptyRegions();
+	std::cout << "Found " << regions.size() << " empty regions" << std::endl;
+
+	// Fill regions that don't contain enemies
+	int filledRegions = 0;
+	for (size_t i = 0; i < regions.size(); ++i) {
+		bool hasEnemy = regionContainsEnemy(regions[i]);
+		std::cout << "Region " << i << " (size " << regions[i].size() << ") has enemy: " << (hasEnemy ? "YES" : "NO") << std::endl;
+
+		if (!hasEnemy) {
+			// Fill this region!
+			for (const auto& [row, col] : regions[i]) {
+				m_board.setTile(row, col, std::make_unique<FullTile>());
+			}
+			filledRegions++;
+			std::cout << "Filled region " << i << std::endl;
+		}
+	}
+
+	std::cout << "Filled " << filledRegions << " regions without enemies" << std::endl;
 }
