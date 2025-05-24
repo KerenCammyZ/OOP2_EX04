@@ -39,6 +39,28 @@ void Player::setDirection(sf::Keyboard::Key keyCode)
 		}
 }
 
+void Player::removeLife()
+{
+	m_lives--;
+}
+
+int Player::getLives()
+{
+	return m_lives;
+}
+
+void Player::setLives(int life)
+{
+	m_lives = life;
+}
+
+void Player::handleCollision(Enemy& enemy)
+{
+	removeLife();
+	setPosition(getStartPosition());
+	getTrail().clearTrail();
+}
+
 
 //void Player::removeLife()
 //{

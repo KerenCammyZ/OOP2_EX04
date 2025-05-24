@@ -128,14 +128,14 @@ Tile* Board::getTileAt(const sf::Vector2f& position) const
     return nullptr;
 }
 
-//bool Board::isFilledTile(int row, int col) const
-//{
-//    auto it = m_board.find({ row, col });
-//    if (it != m_board.end()) {
-//        return it->second->getType() == TileType::Full;
-//    }
-//    return false; // Out of bounds considered not filled
-//}
+bool Board::isFilledTile(int row, int col) const
+{
+    auto it = m_board.find({ row, col });
+    if (it != m_board.end()) {
+        return it->second->getType() == TileType::Full;
+    }
+    return false; // Out of bounds considered not filled
+}
 
 // Iterator support methods
 Board::iterator Board::find(const std::pair<int, int>& key)

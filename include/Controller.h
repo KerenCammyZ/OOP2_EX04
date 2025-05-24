@@ -40,10 +40,10 @@ private:
    LevelManager m_levelManager;  
    sf::RenderWindow m_window;
 
-   int m_lives{3};
+   //int m_lives{3}; // get set from Player
    bool m_running{ false };  // defines game state
-   //int m_percentageFilled = 0;
    int m_requiredPercentage{50};  // required to complete level
+   //int m_percentageFilled = 0;
    //bool m_playerOnFilledTile{ true };
 
    sf::Time m_deltaTime;  

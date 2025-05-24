@@ -2,7 +2,7 @@
 #include "Tile.h"
 #include <vector>
 
-//using ClaimedTiles = std::vector<std::shared_ptr<Tile>>;
+using TrailTiles = std::vector<std::shared_ptr<Tile>>;
 
 
 class Trail 
@@ -20,10 +20,10 @@ public:
 	//setters and getters
 	void setSize(int size) { m_size = size; }
 	int getSize() const { return m_size; }
-	//const ClaimedTiles& getTiles() const { return m_tiles; }
+	const TrailTiles& getTiles() const { return m_tiles; }
 
 private:
 	int m_size;
-	//ClaimedTiles m_tiles;
+	//TrailTiles m_tiles;
 	std::vector<std::shared_ptr<Tile>> m_tiles;
 };

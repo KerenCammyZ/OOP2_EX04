@@ -59,7 +59,7 @@ void Controller::run()
 		handleCollisions();
 		updatePlayerOutlineColor();
 
-		if (m_lives <= 0) //if(m_player.getLives() <= 0)
+		if (m_player.getLives() <= 0)
 		{
 			loadNextLevel(levelData);
 		}
@@ -82,7 +82,7 @@ void Controller::run()
 void Controller::loadNextLevel(LevelData& levelData)
 {
 	m_levelManager.loadNextLevel(levelData);
-	m_lives = m_levelManager.getInitialLives();
+	m_player.setLives(m_levelManager.getInitialLives());
 	m_requiredPercentage = levelData.requiredPercentage;
 
 	m_board.initializeBoard(levelData.enemyCount);
@@ -102,20 +102,6 @@ void Controller::checkBoundries(GameObject& obj) const
 	}
 }
 
-void Controller::updatePlayerOutlineColor()
-{
-	
-	Tile* tile = m_board.getTileAt(m_player.getPosition());
-	if (tile) {
-		std::cout << "player on tile type: " << static_cast<int>(tile->getType()) << std::endl;
-		if (tile && tile->getType() == TileType::Full) {
-			m_player.setOutlineColor(sf::Color::Black);
-		}
-		else {
-			m_player.setOutlineColor(sf::Color::White);
-		}
-	} else { std::cout << "player on tile type: nullptr" << std::endl; }
-}
 
 void Controller::handleEvents()
 {
@@ -147,7 +133,8 @@ void Controller::handleStats()
 	if (!font.loadFromFile("arial.ttf")) {
 		throw std::runtime_error("Failed to load font file: arial.ttf");
 	}
-	sf::Text lives("Lives: " + std::to_string(m_lives), font, 30);
+	int remainingLives = m_player.getLives();
+	sf::Text lives("Lives: " + std::to_string(remainingLives), font, 30);
 	lives.setFillColor(sf::Color::White);
 	lives.setPosition(10, m_window.getSize().y - 35);
 	m_window.draw(lives);
@@ -186,9 +173,29 @@ void Controller::waitForSpace()
 void Controller::handleCollisions()
 {
 	checkBoundries(m_player);
-	for (auto& enemyPtr : m_board.getEnemies())
-		checkBoundries(*enemyPtr);
 
+	for (auto& enemy : m_board.getEnemies()) 
+	{
+		// ememy-boundries collision
+		checkBoundries(*enemy);
+
+		// check for collisions between player and enemy
+		for (const auto& trailTile : m_player.getTrail().getTiles())
+		{		
+			// trail-enemy collision
+			if (enemy->checkCollision(*trailTile))
+			{
+				m_player.handleCollision(*enemy);
+				break;
+			}
+			// player-enemy collision
+			if (m_player.checkCollision(*enemy))
+			{
+				m_player.handleCollision(*enemy);
+				break;
+			}
+		}
+	}
 	bool collided = false;
 	//checkPlayerGameBounds(m_player);
 
@@ -238,4 +245,20 @@ void Controller::handleEnemyTileCollisions()
 			}
 		}
 	}
+}
+
+// Check if the player is on a filled tile and update outline color accordingly
+void Controller::updatePlayerOutlineColor()
+{
+	
+	Tile* tile = m_board.getTileAt(m_player.getPosition());
+	if (tile) {
+		std::cout << "player on tile type: " << static_cast<int>(tile->getType()) << std::endl;
+		if (tile && tile->getType() == TileType::Full) {
+			m_player.setOutlineColor(sf::Color::Black);
+		}
+		else {
+			m_player.setOutlineColor(sf::Color::White);
+		}
+	} else { std::cout << "player on tile type: nullptr" << std::endl; }
 }
