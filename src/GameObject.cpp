@@ -115,7 +115,7 @@ void GameObject::setColor(const sf::Color& color)
 void GameObject::setOutlineColor(const sf::Color& color)
 {
     if (m_shape) {
-        m_shape->setOutlineThickness(-2.5f);
+        m_shape->setOutlineThickness(-5.0f);
         m_shape->setOutlineColor(color);
     }
 }

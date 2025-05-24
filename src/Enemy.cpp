@@ -37,6 +37,7 @@ sf::Vector2f Enemy::getDirection() const
 	return m_direction;
 }
 
+// Handle fullTile Collision
 void Enemy::handleCollision(Tile& fullTile)
 {
 	// Revert to previous position to avoid getting stuck

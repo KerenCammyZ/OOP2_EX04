@@ -21,10 +21,15 @@ public:
 	virtual void handleCollision(Player& player) override {};
 	virtual void handleCollision(Tile& tile) override {};
 
+    private:  
+	//bool isOnFilledTile() const { return m_onFilledTile; }
+	//void setOnFilledTile(bool onFilled) { m_onFilledTile = onFilled; }
+
 private:
 	int m_lives;
 	sf::Vector2f m_direction;
 	float m_speed = 300.f;
 
 	Trail m_trail;
+	//bool m_onFilledTile = true;
 };

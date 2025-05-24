@@ -24,6 +24,8 @@ public:
 
    void waitForSpace();
    void loadNextLevel(LevelData& levelData);
+   //bool checkTrailCompleted();
+   //bool checkPlayerTileTransition();
 
    void handleCollisions();
    void handleEnemyTileCollisions();
@@ -40,7 +42,10 @@ private:
 
    int m_lives{3};
    bool m_running{ false };  // defines game state
+   //int m_percentageFilled = 0;
    int m_requiredPercentage{50};  // required to complete level
+   //bool m_playerOnFilledTile{ true };
+
    sf::Time m_deltaTime;  
    sf::Clock m_clock;
 };

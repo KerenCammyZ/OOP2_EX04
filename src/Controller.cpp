@@ -51,7 +51,7 @@ void Controller::run()
 		}
 		// handle player movement
 		handleKeyPressed(event.key.code, m_deltaTime);
-
+		// --
 
 		// update the game state  
 		// update();
@@ -63,6 +63,7 @@ void Controller::run()
 		{
 			loadNextLevel(levelData);
 		}
+		// --
 
 		// draw everything  
 		// draw();  		
@@ -74,6 +75,7 @@ void Controller::run()
 		m_player.draw(m_window);
 
 		m_window.display();// end the current frame  
+		// --
 	}
 }
 
@@ -91,9 +93,9 @@ void Controller::loadNextLevel(LevelData& levelData)
 
 void Controller::checkBoundries(GameObject& obj) const
 {
-	if (obj.getPosition().x > m_board.getCols() * tileSize - tileSize  ||
-		obj.getPosition().y > m_board.getRows() * tileSize - tileSize ||
-		obj.getPosition().x < 0 ||
+	if (obj.getPosition().x >= m_board.getCols() * tileSize - tileSize  ||
+		obj.getPosition().y >= m_board.getRows() * tileSize - tileSize ||
+		obj.getPosition().x <= 0 ||
 		obj.getPosition().y < 0)
 	{
 		obj.setPosition(obj.getOldLocation());
@@ -190,7 +192,6 @@ void Controller::handleCollisions()
 	bool collided = false;
 	//checkPlayerGameBounds(m_player);
 
-
 	if (collided)
 	{
 		// lose life, respawn, etc...
@@ -238,5 +239,3 @@ void Controller::handleEnemyTileCollisions()
 		}
 	}
 }
-
-
