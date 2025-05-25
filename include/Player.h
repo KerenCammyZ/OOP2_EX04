@@ -17,6 +17,8 @@ public:
 	Trail& getTrail() { return m_trail; }
 	bool checkTrailCompleted(TileType currentTileType);
 
+	void reset();
+
 	virtual void handleCollision(Enemy& enemy) override;
 	virtual void handleCollision(GameObject& unknownObj) override {};
 	virtual void handleCollision(Player& player) override {};

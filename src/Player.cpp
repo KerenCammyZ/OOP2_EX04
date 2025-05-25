@@ -72,17 +72,6 @@ void Player::handleCollision(Enemy& enemy)
 	m_OnEmptyTile = false;
 }
 
-
-//void Player::removeLife()
-//{
-//	m_life--;
-//}
-//
-//int Player::getLife()
-//{
-//	return m_life;
-//}
-
 void Player::move(sf::Time deltaTime)  
 {  
 	m_oldPosition = m_shape->getPosition();  
@@ -93,4 +82,12 @@ void Player::move(sf::Time deltaTime)
 	// 
 	//  -- moved code to Controller::updatePlayerState()
 	
+}
+
+void Player::reset()
+{
+	m_lives = 3;
+	m_OnEmptyTile = false;
+	setPosition(getStartPosition());
+	getTrail().clearTrail();
 }

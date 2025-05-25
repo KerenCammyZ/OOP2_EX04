@@ -18,11 +18,11 @@ Controller::Controller()
 	if (!m_levelManager.initialize()) {
 		throw std::runtime_error("Failed to initialize level manager");
 	}
-	sf::Vector2u windowSize = m_levelManager.getWindowSize();
 
 	if (!m_font.loadFromFile("arial.ttf")) {
 		throw std::runtime_error("Failed to load font file: arial.ttf");
 	}
+	sf::Vector2u windowSize = m_levelManager.getWindowSize();
 
 	// Update the window size based on the data read from the file
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), "Xonix");
@@ -33,7 +33,6 @@ Controller::Controller()
 	m_board = Board(rows, cols); // leave 4 tileSize space on bottom for stats
 }
 
-
 void Controller::run()
 {
 	LevelData levelData;
@@ -41,6 +40,7 @@ void Controller::run()
 	m_player.setOldPosition(m_player.getStartPosition());
 	waitForSpace(); // Wait for space key to be pressed before starting the game  
 	loadNextLevel(levelData); // Load the first level
+	m_currentLevelData = levelData; // Store the current level data
 
 	while (m_window.isOpen())
 	{
@@ -59,31 +59,38 @@ void Controller::run()
 		}
 		// handle player movement
 		handleKeyPressed(event.key.code, m_deltaTime);
-		// --
+		
+		// Handle events like collisions, stats, etc.
+		handleEvents(); 
 
 		// update the game state  
-		// update();
-		m_board.update(m_deltaTime);
+		update();
+		/*m_board.update(m_deltaTime);
 		handleCollisions();
 		updatePlayerState();
+		handleStats();*/
 
 		if (m_player.getLives() <= 0)
 		{
 			loadNextLevel(levelData);
 		}
-		// --
 
-		// draw everything  
-		// draw();  		
+		// draw everything  		
 		m_window.clear(sf::Color::Black); // clear window with black color  
-		
-		handleStats();
+		try {
+			draw();
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Error during drawing: " << e.what() << std::endl;
+			resetGame(); // Reset the game if an error occurs
+			continue; // Skip the rest of the loop to avoid further issues
+		}
+		/*handleStats();
 		m_board.draw(m_window);
 		m_player.getTrail().draw(m_window);
-		m_player.draw(m_window);
+		m_player.draw(m_window);*/
 
 		m_window.display();// end the current frame  
-		// --
 	}
 }
 
@@ -113,14 +120,23 @@ void Controller::checkBoundries(GameObject& obj) const
 
 void Controller::handleEvents()
 {
+	handleStats();
+	handleCollisions();
 }
 
 void Controller::update()
 {
+	handleStats();
+	m_board.update(m_deltaTime);
+	updatePlayerState();
 }
 
 void Controller::draw()
 {
+	handleStats();
+	m_board.draw(m_window);
+	m_player.getTrail().draw(m_window);
+	m_player.draw(m_window);
 }
 
 void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
@@ -385,4 +401,13 @@ void Controller::claimTerritory()
 	}
 
 	std::cout << "Filled " << filledRegions << " regions without enemies" << std::endl;
+}
+
+void Controller::resetGame()
+{
+	m_board.reset();
+	m_player.reset();
+	m_running = false;
+	m_levelManager.reset(m_currentLevelData);
+	loadNextLevel(m_currentLevelData);
 }

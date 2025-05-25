@@ -27,6 +27,9 @@ public:
    void loadNextLevel(LevelData& levelData);
    void claimTerritory();
 
+   void resetGame();
+   void runGameLoop();
+
    void handleCollisions();
    void handleFullTileEnemyCollisions();
    virtual void handleCollision(GameObject& unknownObj) {};
@@ -37,13 +40,13 @@ public:
 private:  
    Board m_board; 
    Player m_player;  
-   LevelManager m_levelManager;  
+   LevelManager m_levelManager; 
+   LevelData m_currentLevelData;
    sf::RenderWindow m_window;
    std::vector<std::vector<std::pair<int, int>>> findEmptyRegions();
    std::vector<std::pair<int, int>> exploreRegion(int startRow, int startCol, std::set<std::pair<int, int>>& visited);
    bool regionContainsEnemy(const std::vector<std::pair<int, int>>& region);
 
-   //int m_lives{3}; // get set from Player
    bool m_running{ false };  // defines game state
    int m_requiredPercentage{50};  // required to complete level
    //int m_percentageFilled = 0;

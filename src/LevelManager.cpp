@@ -67,3 +67,12 @@ int LevelManager::getEnemyCount() const
 {
     return m_enemyCount;
 }
+
+void LevelManager::reset(LevelData& levelData)
+{
+	//reset the level data if needed
+    m_fileStream.clear(); // Clear any error flags
+    m_fileStream.seekg(0); // Go back to the beginning of the file
+    loadNextLevel(levelData); // Load the first level again
+	m_enemyCount = levelData.enemyCount; // Reset enemy count
+}

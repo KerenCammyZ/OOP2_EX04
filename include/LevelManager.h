@@ -21,6 +21,8 @@ public:
     int getInitialLives() const;
     int getEnemyCount() const;
 
+    void reset(LevelData& levelData);
+
 private:
     int m_initialLives;
     int m_enemyCount;
