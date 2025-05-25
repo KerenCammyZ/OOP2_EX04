@@ -15,18 +15,23 @@ public:
 	int getLives();
 	void setLives(int life);
 	Trail& getTrail() { return m_trail; }
+	bool checkTrailCompleted(TileType currentTileType);
 
+	virtual void handleCollision(Enemy& enemy) override;
 	virtual void handleCollision(GameObject& unknownObj) override {};
-	virtual void handleCollision(Enemy& enemy) override {};
 	virtual void handleCollision(Player& player) override {};
 	virtual void handleCollision(Tile& tile) override {};
 
+    private:  
+	//bool isOnFilledTile() const { return m_onFilledTile; }
+	//void setOnFilledTile(bool onFilled) { m_onFilledTile = onFilled; }
 
 private:
 	int m_lives;
 	sf::Vector2f m_direction;
-	float m_speed = 160.f;
+	float m_speed = 300.f;
 
 	Trail m_trail;
-
+	bool m_OnEmptyTile{ false };
+	//bool m_onFilledTile = true;
 };

@@ -6,6 +6,7 @@ Player::Player()
 {
 	m_shape = std::make_unique<sf::RectangleShape>(sf::Vector2f(tileSize, tileSize));
 	setColor(sf::Color::Magenta);
+	setOutlineColor(sf::Color::Black);
 	setPosition(sf::Vector2f(0, 0));
 	m_lives = 3;
 }
@@ -38,6 +39,40 @@ void Player::setDirection(sf::Keyboard::Key keyCode)
 		}
 }
 
+void Player::removeLife()
+{
+	m_lives--;
+}
+
+int Player::getLives()
+{
+	return m_lives;
+}
+
+void Player::setLives(int life)
+{
+	m_lives = life;
+}
+
+bool Player::checkTrailCompleted(TileType currentTileType)
+{
+	bool wasOnEmpty = m_OnEmptyTile;
+	bool nowOnFilled = (currentTileType == TileType::Full);
+
+	m_OnEmptyTile = (currentTileType != TileType::Full);
+	return (wasOnEmpty && nowOnFilled);
+
+}
+
+void Player::handleCollision(Enemy& enemy)
+{
+	removeLife();
+	setPosition(getStartPosition());
+	getTrail().clearTrail();
+	m_OnEmptyTile = false;
+}
+
+
 //void Player::removeLife()
 //{
 //	m_life--;
@@ -54,7 +89,8 @@ void Player::move(sf::Time deltaTime)
 	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());  
 	setPosition(m_shape->getPosition());  
 
-	auto tile = std::make_shared<Tile>(m_shape->getPosition().x, m_shape->getPosition().y, sf::Color::Magenta);  
-	tile->setPosition(m_shape->getPosition());  
-	m_trail.addTile(tile);
+	// Add a tile to the trail at the current position
+	// 
+	//  -- moved code to Controller::updatePlayerState()
+	
 }

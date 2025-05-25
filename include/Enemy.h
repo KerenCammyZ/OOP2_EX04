@@ -7,13 +7,10 @@ public:
 	Enemy();
 
    ~Enemy() override = default; 
-
    virtual void move(sf::Time deltaTime) override;
 
    //setters and getters
-	void setSpeed(const float speed);
 	void setDirection(const sf::Vector2f direction);
-	float getSpeed() const;
 	sf::Vector2f getDirection() const;
 
 	virtual void handleCollision(GameObject& unknownObj) override {};

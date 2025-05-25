@@ -2,6 +2,9 @@
 #include "Tile.h"
 #include <vector>
 
+using TrailTiles = std::vector<std::shared_ptr<Tile>>;
+
+
 class Trail 
 {
 public:
@@ -17,7 +20,10 @@ public:
 	//setters and getters
 	void setSize(int size) { m_size = size; }
 	int getSize() const { return m_size; }
+	const TrailTiles& getTiles() const { return m_tiles; }
+
 private:
 	int m_size;
+	//TrailTiles m_tiles;
 	std::vector<std::shared_ptr<Tile>> m_tiles;
 };

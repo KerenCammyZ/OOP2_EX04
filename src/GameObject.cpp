@@ -69,12 +69,11 @@ void GameObject::draw(sf::RenderWindow& window)
 {
     if (m_shape) {
         window.draw(*m_shape);
-        // TODO: apply window width offset if position not aligned with board
     }
 }
 
 // Getters
-sf::Vector2f GameObject::getLocation() const
+sf::Vector2f GameObject::getPosition() const
 {
     return m_position; 
 }
@@ -113,21 +112,20 @@ void GameObject::setColor(const sf::Color& color)
     }
 }
 
-void GameObject::setPosition(sf::Vector2f position)
+void GameObject::setOutlineColor(const sf::Color& color)
 {
-   
-    m_position = position; 
     if (m_shape) {
-        m_shape->setPosition(position);
+        m_shape->setOutlineThickness(-5.0f);
+        m_shape->setOutlineColor(color);
     }
 }
 
-void GameObject::setStartPosition()
+
+void GameObject::setStartPosition(const sf::Vector2f& position)
 {
-    // m_shape.setPosition(50.f, 50.f); // Example of what it might do
 }
 
-void GameObject::setLocation(const sf::Vector2f& position)
+void GameObject::setPosition(const sf::Vector2f& position)
 {
     m_position = position; 
     if (m_shape) {
