@@ -19,8 +19,6 @@ public:
 	GameObject operator=(const GameObject& other);
 	//draw object on the screen
 	void draw(sf::RenderWindow& window);
-	//virtual void update(float deltaTime) = 0;
-	//virtual void handleInput(int key, int action) = 0;
 
 	//setters and getters
 	sf::Vector2f getPosition() const;
@@ -37,7 +35,6 @@ public:
 
 	//handle collision with other game objects
 	bool checkCollision(GameObject& unknownObj) const;
-
 	virtual void handleCollision(GameObject& unknownObj) {};
 	virtual void handleCollision(Enemy& enemy) {};
 	virtual void handleCollision(Player& player) {};

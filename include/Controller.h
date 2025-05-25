@@ -12,24 +12,25 @@
 class Controller  
 {  
 public:  
+	// constructor and destructor
    Controller();  
    ~Controller() = default;  
+
+   //other methods
    void run();
-   void checkBoundries(GameObject& obj) const;
    void updatePlayerState();
    void handleEvents();
    void update();
    void draw();  
    void handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime);  
    void handleStats();
-
    void waitForSpace();
    void loadNextLevel(LevelData& levelData);
    void claimTerritory();
-
    void resetGame();
-   void runGameLoop();
 
+   // collision handling methods
+   void checkBoundries(GameObject& obj) const;
    void handleCollisions();
    void handleFullTileEnemyCollisions();
    virtual void handleCollision(GameObject& unknownObj) {};
@@ -47,9 +48,8 @@ private:
    std::vector<std::pair<int, int>> exploreRegion(int startRow, int startCol, std::set<std::pair<int, int>>& visited);
    bool regionContainsEnemy(const std::vector<std::pair<int, int>>& region);
 
-   bool m_running{ false };  // defines game state
+   bool m_running{ false };
    int m_requiredPercentage{50};  // required to complete level
-   //int m_percentageFilled = 0;
 
    sf::Font m_font;
    sf::Time m_deltaTime;  

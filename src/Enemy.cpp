@@ -7,22 +7,12 @@ Enemy::Enemy()
 {
 	m_shape = std::make_unique<sf::CircleShape>(tileSize / 2.0f);
     m_shape->setFillColor(sf::Color::Red);
-	//m_shape->setOrigin(tileSize / 2.0f, tileSize / 2.0f);
-
 }
 
 void Enemy::move(sf::Time deltaTime)
 {
 	setOldPosition(m_shape->getPosition());
 	sf::Vector2f newPos = getPosition() + m_direction * m_speed * deltaTime.asSeconds();
-	// Simple boundary check as safety net
-	/*
-	if (illegalPosition) {
-		setPosition(getOldLocation()); // Stay at old position
-		// Could also reverse direction here
-		return;
-	}
-	*/
 	setPosition(newPos);
 	
 }

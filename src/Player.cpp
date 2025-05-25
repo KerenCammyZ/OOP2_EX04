@@ -77,11 +77,6 @@ void Player::move(sf::Time deltaTime)
 	m_oldPosition = m_shape->getPosition();  
 	m_shape->move(m_direction * m_speed * deltaTime.asSeconds());  
 	setPosition(m_shape->getPosition());  
-
-	// Add a tile to the trail at the current position
-	// 
-	//  -- moved code to Controller::updatePlayerState()
-	
 }
 
 void Player::reset()

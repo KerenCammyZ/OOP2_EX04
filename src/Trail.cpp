@@ -1,5 +1,4 @@
 #include "Trail.h"
-#include "Trail.h"
 #include <SFML\Graphics.hpp>
 
 Trail::Trail() : m_size(0){}

@@ -24,10 +24,6 @@ public:
 	virtual void handleCollision(Player& player) override {};
 	virtual void handleCollision(Tile& tile) override {};
 
-    private:  
-	//bool isOnFilledTile() const { return m_onFilledTile; }
-	//void setOnFilledTile(bool onFilled) { m_onFilledTile = onFilled; }
-
 private:
 	int m_lives;
 	sf::Vector2f m_direction;
@@ -35,5 +31,4 @@ private:
 
 	Trail m_trail;
 	bool m_OnEmptyTile{ false };
-	//bool m_onFilledTile = true;
 };

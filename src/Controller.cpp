@@ -13,7 +13,7 @@ Controller::Controller()
 	m_window(sf::VideoMode(800, 600), "Xonix"),
 	m_running(false),
 	m_levelManager("levels.txt"),
-	m_board() // Initialize with default constructor
+	m_board()
 {
 	if (!m_levelManager.initialize()) {
 		throw std::runtime_error("Failed to initialize level manager");
@@ -40,7 +40,7 @@ void Controller::run()
 	m_player.setOldPosition(m_player.getStartPosition());
 	waitForSpace(); // Wait for space key to be pressed before starting the game  
 	loadNextLevel(levelData); // Load the first level
-	m_currentLevelData = levelData; // Store the current level data
+	m_currentLevelData = levelData;
 
 	while (m_window.isOpen())
 	{
@@ -50,7 +50,6 @@ void Controller::run()
 			m_deltaTime = sf::seconds(0.016f);
 		
 		// handle input  
-		// handleEvents()
 		sf::Event event;
 		while (m_window.pollEvent(event))
 		{
@@ -65,10 +64,6 @@ void Controller::run()
 
 		// update the game state  
 		update();
-		/*m_board.update(m_deltaTime);
-		handleCollisions();
-		updatePlayerState();
-		handleStats();*/
 
 		if (m_player.getLives() <= 0)
 		{
@@ -77,18 +72,16 @@ void Controller::run()
 
 		// draw everything  		
 		m_window.clear(sf::Color::Black); // clear window with black color  
-		try {
+		try 
+		{
 			draw();
 		}
-		catch (const std::exception& e) {
+		catch (const std::exception& e) 
+		{
 			std::cerr << "Error during drawing: " << e.what() << std::endl;
 			resetGame(); // Reset the game if an error occurs
 			continue; // Skip the rest of the loop to avoid further issues
 		}
-		/*handleStats();
-		m_board.draw(m_window);
-		m_player.getTrail().draw(m_window);
-		m_player.draw(m_window);*/
 
 		m_window.display();// end the current frame  
 	}
@@ -151,7 +144,6 @@ void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 // draw game stats on the screen
 void Controller::handleStats()
 {
-	// handle stats here
 	// draw lives, score, etc...	
 	int remainingLives = m_player.getLives();
 	sf::Text lives("Lives: " + std::to_string(remainingLives), m_font, 30);
@@ -217,13 +209,6 @@ void Controller::handleCollisions()
 			break;
 		}
 	}
-	bool collided = false;
-	//checkPlayerGameBounds(m_player);
-
-	if (collided)
-	{
-		// lose life, respawn, etc...
-	}
 
 	handleFullTileEnemyCollisions();
 }
@@ -279,7 +264,6 @@ void Controller::updatePlayerState()
 	}
 
 	if (m_player.checkTrailCompleted(tile->getType())) {
-		std::cout << "Trail completed!" << std::endl;
 		claimTerritory();
 	}
 
@@ -366,11 +350,8 @@ bool Controller::regionContainsEnemy(const std::vector<std::pair<int, int>>& reg
 
 void Controller::claimTerritory()
 {
-	std::cout << "=== CLAIM TERRITORY CALLED ===" << std::endl;
-
 	// Convert trail to filled tiles (your existing code)
 	const auto& trailTiles = m_player.getTrail().getTiles();
-	std::cout << "Trail has " << trailTiles.size() << " tiles" << std::endl;
 
 	for (const auto& trailTile : trailTiles) {
 		sf::Vector2f pos = trailTile->getPosition();
@@ -382,13 +363,11 @@ void Controller::claimTerritory()
 
 	// Find all empty regions
 	auto regions = findEmptyRegions();
-	std::cout << "Found " << regions.size() << " empty regions" << std::endl;
 
 	// Fill regions that don't contain enemies
 	int filledRegions = 0;
 	for (size_t i = 0; i < regions.size(); ++i) {
 		bool hasEnemy = regionContainsEnemy(regions[i]);
-		std::cout << "Region " << i << " (size " << regions[i].size() << ") has enemy: " << (hasEnemy ? "YES" : "NO") << std::endl;
 
 		if (!hasEnemy) {
 			// Fill this region!
@@ -396,11 +375,8 @@ void Controller::claimTerritory()
 				m_board.setTile(row, col, std::make_unique<FullTile>());
 			}
 			filledRegions++;
-			std::cout << "Filled region " << i << std::endl;
 		}
 	}
-
-	std::cout << "Filled " << filledRegions << " regions without enemies" << std::endl;
 }
 
 void Controller::resetGame()

@@ -24,6 +24,5 @@ public:
 
 private:
 	int m_size;
-	//TrailTiles m_tiles;
 	std::vector<std::shared_ptr<Tile>> m_tiles;
 };

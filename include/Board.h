@@ -9,7 +9,6 @@
 
 
 // Hash function for std::pair<int, int> to be used in unordered_map
-// This is necessary because std::pair does not have a default hash function in the standard library.
 struct PairHash {
     std::size_t operator()(const std::pair<int, int>& p) const noexcept {
         return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
@@ -23,26 +22,29 @@ using Enemies = std::vector<std::unique_ptr<Enemy>>;
 class Board
 {
 public:
+	// Constructors and destructors
     Board();
     Board(int rows, int cols);
-    // Deleted copy constructor and assignment operator
     Board(const Board&) = delete;
     Board& operator=(const Board&) = delete;
-    // Default move constructor and assignment operator
     Board(Board&&) = default;
     Board& operator=(Board&&) = default;
 
+    // other methods
     void initializeBoard(int numOfEnemies);
     void draw(sf::RenderWindow& window) const;
     void update(sf::Time deltaTime) const;
+    void reset(); // reset board
+    bool isFilledTile(int row, int col) const;
 
+	// setters and getters
     void setTile(int row, int col, std::unique_ptr<Tile> tile);
     Tile* getTileAt(const sf::Vector2f& position) const;
-
-    void reset(); // reset board
-    //void claimTerritory(const std::vector<std::shared_ptr<Tile>>& trail);
-    bool isFilledTile(int row, int col) const;
-    
+    int getRows() const { return m_rows; }
+    int getCols() const { return m_cols; }
+    const Enemies& getEnemies() const { return m_enemies; }
+    const TileMap& getTiles() const { return m_board; }
+  
     // Add iterator support      
     using iterator = TileMap::iterator;
     using const_iterator = TileMap::const_iterator;
@@ -50,13 +52,6 @@ public:
     const_iterator find(const std::pair<int, int>& key) const;
     iterator end();
     const_iterator end() const;
-
-    
-    int getRows() const { return m_rows; }
-    int getCols() const { return m_cols; }
-	const Enemies& getEnemies() const { return m_enemies; }
-    const TileMap& getTiles() const { return m_board; }
-    
 
 private:
     int m_rows;
