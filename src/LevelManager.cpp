@@ -4,7 +4,7 @@
 #include <iostream>
 
 LevelManager::LevelManager(const std::string& filePath)
-    : m_filePath(filePath), m_windowSize(800, 600), m_initialLives(3)
+	: m_filePath(filePath), m_windowSize(800, 600), m_initialLives(3), m_enemyCount(0)
 {
 }
 
@@ -38,6 +38,7 @@ bool LevelManager::initialize()
     return false;
 }
 
+
 bool LevelManager::loadNextLevel(LevelData& levelData)
 {
     std::string line;
@@ -48,7 +49,6 @@ bool LevelManager::loadNextLevel(LevelData& levelData)
             return true;
         }
     }
-    std::cout << "LevelManager loadNextLevel\n";
     return false;
 }
 

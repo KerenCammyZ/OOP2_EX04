@@ -120,9 +120,9 @@ void GameObject::setOutlineColor(const sf::Color& color)
     }
 }
 
-
 void GameObject::setStartPosition(const sf::Vector2f& position)
 {
+    m_startPosition = position;
 }
 
 void GameObject::setPosition(const sf::Vector2f& position)

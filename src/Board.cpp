@@ -19,7 +19,7 @@ Board::Board(int rows, int cols)
     // Constructor
 }
 
-void Board::reset()
+void Board::initializeBoard(int numOfEnemies)
 {
     int enemyCount = static_cast<int>(m_enemies.size());
     m_enemies.clear();
@@ -137,7 +137,16 @@ bool Board::isFilledTile(int row, int col) const
     return false; // Out of bounds considered not filled
 }
 
-
+float Board::getFilledPercentage() const
+{
+    int filled = 0;
+    int total = m_rows * m_cols;
+    for (const auto& pair : m_board) {
+        if (pair.second && pair.second->getType() == TileType::Full)
+            ++filled;
+    }
+    return total > 0 ? static_cast<float>(filled) / total : 0.f;
+}
 // Iterator support methods
 Board::iterator Board::find(const std::pair<int, int>& key)
 {
