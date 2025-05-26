@@ -63,12 +63,7 @@ void Controller::run()
 		handleEvents(); 
 
 		// update the game state  
-		update();
-
-		if (m_player.getLives() <= 0)
-		{
-			loadNextLevel(levelData);
-		}
+		update(levelData);
 
 		// draw everything  		
 		m_window.clear(sf::Color::Black); // clear window with black color  
@@ -89,7 +84,8 @@ void Controller::run()
 
 void Controller::loadNextLevel(LevelData& levelData)
 {
-	m_levelManager.loadNextLevel(levelData);
+	if (!m_levelManager.loadNextLevel(levelData))
+		m_won = true;
 	m_player.setLives(m_levelManager.getInitialLives());
 	m_requiredPercentage = levelData.requiredPercentage;
 
@@ -101,27 +97,49 @@ void Controller::loadNextLevel(LevelData& levelData)
 
 void Controller::handleKeyPressed(sf::Keyboard::Key keyCode, sf::Time deltaTime)
 {
-	if (obj.getPosition().x >= m_board.getCols() * tileSize - tileSize  ||
-		obj.getPosition().y >= m_board.getRows() * tileSize - tileSize ||
-		obj.getPosition().x <= 0 ||
-		obj.getPosition().y < 0)
-	{
-		obj.setPosition(obj.getOldLocation());
-	}
+	m_player.setDirection(keyCode);
+	m_player.move(deltaTime);
+
+	if (keyCode == sf::Keyboard::R)
+		m_board.reset();
 }
 
+//void Controller::update()
+//{
+//	//handleStats();
+//	m_board.update(m_deltaTime);
+//	updatePlayerState();
+//}
+void Controller::update(LevelData& levelData)
+{
+	m_board.update(m_deltaTime);
+	updatePlayerState();
+
+	int filledPercentage = static_cast<int>(m_board.getFilledPercentage() * 100);
+	if (filledPercentage >= m_requiredPercentage)
+	{
+		showLevelCompleteScreen();
+		m_level++;
+		loadNextLevel(levelData);
+	}
+
+	if (m_won)
+	{
+		m_running = false;
+		waitScreen("Game Complete!");
+	}
+
+	if (m_player.getLives() < 0)
+	{
+		m_running = false;
+		waitScreen("Game Over!");
+	}
+}
 
 void Controller::handleEvents()
 {
 	handleStats();
 	handleCollisions();
-}
-
-void Controller::loadNextLevel(LevelData& levelData)
-{
-	handleStats();
-	m_board.update(m_deltaTime);
-	updatePlayerState();
 }
 
 void Controller::draw()
@@ -134,11 +152,13 @@ void Controller::draw()
 
 void Controller::checkBoundries(GameObject& obj) const
 {
-	m_player.setDirection(keyCode);
-	m_player.move(deltaTime);
-	
-	if (keyCode == sf::Keyboard::R)
-		m_board.reset();
+	if (obj.getPosition().x >= m_board.getCols() * tileSize - tileSize ||
+		obj.getPosition().y >= m_board.getRows() * tileSize - tileSize ||
+		obj.getPosition().x <= 0 ||
+		obj.getPosition().y < 0)
+	{
+		obj.setPosition(obj.getOldLocation());
+	}
 }
 
 // draw game stats on the screen
@@ -147,16 +167,16 @@ void Controller::handleStats()
 	int remainingLives = m_player.getLives();
 	int filledPercentage = static_cast<int>(m_board.getFilledPercentage() * 100);
 	int requiredPercentage = m_requiredPercentage;
-	int livesSize = 20;
-	int scoreSize = 18;
-	float margin = 10.f;
-	float verticalSpacing = 18.f;
+	float margin = 15.f;
+	//float verticalSpacing = 15.f;*/
+	float textSize = 25;
+	float verticalHeight =   m_window.getSize().y - ((4 * tileSize) - 15);
 
 	sf::Text lives;
 	lives.setFont(m_font);
 	lives.setString("Lives: " + std::to_string(remainingLives));
-	lives.setCharacterSize(livesSize);
-	lives.setPosition(margin, m_window.getSize().y - 2 * (livesSize + margin));
+	lives.setCharacterSize(textSize);
+	lives.setPosition(margin, verticalHeight);
 
 	// Lives are colored Red when player has no more left
 	if (m_player.getLives() == 0)
@@ -172,13 +192,21 @@ void Controller::handleStats()
 	sf::Text scoreText;
 	scoreText.setFont(m_font);
 	scoreText.setString("Score: " + std::to_string(m_score));
-	scoreText.setCharacterSize(scoreSize);
+	scoreText.setCharacterSize(textSize);
 	scoreText.setFillColor(sf::Color::Cyan);
 
 	scoreText.setPosition(
-		lives.getPosition().x,
-		lives.getPosition().y + lives.getLocalBounds().height + 8.f
+		lives.getPosition().x + lives.getLocalBounds().width + 25.f,
+		lives.getPosition().y
 	);
+
+	sf::Text levelText;
+	levelText.setFont(m_font);
+	levelText.setString("Level: " + std::to_string(m_level));
+	levelText.setCharacterSize(textSize);
+	levelText.setFillColor(sf::Color::White);
+
+	levelText.setPosition(scoreText.getPosition().x + scoreText.getLocalBounds().width + 25.f, lives.getPosition().y);
 
 	// Progress bar dimensions
 	float barWidth = 300.f;
@@ -216,6 +244,7 @@ void Controller::handleStats()
 	// Draw to window
 	m_window.draw(lives);
 	m_window.draw(scoreText);
+	m_window.draw(levelText);
 	m_window.draw(barBorderRect);
 	m_window.draw(barFillRect);
 	m_window.draw(progressText);
@@ -317,102 +346,6 @@ void Controller::handleFullTileEnemyCollisions()
 	}
 }
 
-// Check if the player is on a filled tile and update state accordingly
-void Controller::updatePlayerState()
-{
-	Tile* tile = m_board.getTileAt(m_player.getPosition());
-	if (tile->getType() == TileType::Full) {
-		m_player.setOutlineColor(sf::Color::Black);
-	}
-	else {
-		m_player.setOutlineColor(sf::Color::White);
-	}
-
-	if (m_player.checkTrailCompleted(tile->getType())) {
-		claimTerritory();
-	}
-
-	// Add a new tile to the player's trail 
-	if (tile && tile->getType() == TileType::Empty) {
-		auto trailTile = std::make_shared<Tile>(
-			m_player.getPosition().x,
-			m_player.getPosition().y,
-			sf::Color::Magenta
-		);
-		trailTile->setPosition(m_player.getPosition());
-		m_player.getTrail().addTile(trailTile);
-	}
-}
-
-
-std::vector<std::vector<std::pair<int, int>>> Controller::findEmptyRegions()
-{
-	std::vector<std::vector<std::pair<int, int>>> regions;
-	std::set<std::pair<int, int>> visited;
-
-	// Find all empty tiles and group them into connected regions
-	for (int row = 2; row < m_board.getRows() - 2; ++row) {
-		for (int col = 2; col < m_board.getCols() - 2; ++col) {
-			if (!m_board.isFilledTile(row, col) && visited.find({ row, col }) == visited.end()) {
-				// Found unvisited empty tile - explore its region
-				std::vector<std::pair<int, int>> region = exploreRegion(row, col, visited);
-				if (!region.empty()) {
-					regions.push_back(region);
-				}
-			}
-		}
-	}
-
-	return regions;
-}
-
-std::vector<std::pair<int, int>> Controller::exploreRegion(int startRow, int startCol, std::set<std::pair<int, int>>& visited)
-{
-	std::vector<std::pair<int, int>> region;
-	std::queue<std::pair<int, int>> toExplore;
-
-	toExplore.push({ startRow, startCol });
-
-	while (!toExplore.empty()) {
-		auto [row, col] = toExplore.front();
-		toExplore.pop();
-
-		// Skip if already visited or out of bounds
-		if (visited.find({ row, col }) != visited.end()) continue;
-		if (row < 2 || row >= m_board.getRows() - 2 || col < 2 || col >= m_board.getCols() - 2) continue;
-		if (m_board.isFilledTile(row, col)) continue;
-
-		// Add to region and mark as visited
-		visited.insert({ row, col });
-		region.push_back({ row, col });
-
-		// Add neighbors to explore
-		toExplore.push({ row - 1, col });
-		toExplore.push({ row + 1, col });
-		toExplore.push({ row, col - 1 });
-		toExplore.push({ row, col + 1 });
-	}
-
-	return region;
-}
-
-bool Controller::regionContainsEnemy(const std::vector<std::pair<int, int>>& region)
-{
-	for (const auto& enemyPtr : m_board.getEnemies()) {
-		sf::Vector2f enemyPos = enemyPtr->getPosition();
-		int enemyRow = static_cast<int>(enemyPos.y) / tileSize;
-		int enemyCol = static_cast<int>(enemyPos.x) / tileSize;
-
-		// Check if enemy is in this region
-		for (const auto& [row, col] : region) {
-			if (enemyRow == row && enemyCol == col) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 void Controller::claimTerritory()
 {
 	float prevPercenatge = m_board.getFilledPercentage();
@@ -445,42 +378,6 @@ void Controller::claimTerritory()
 	int percentCovered = static_cast<int>((updatedPercentage - prevPercenatge) * 100);
 	m_score += percentCovered * pointsPerPercent + 1;
 }
-void Controller::handleFullTileEnemyCollisions()  
-{
-	for (auto& enemyPtr : m_board.getEnemies())
-	{
-		auto& enemy = *enemyPtr;
-
-		sf::FloatRect bounds = enemy.getGlobalBounds();
-		int rows = m_board.getRows();
-		int cols = m_board.getCols();
-
-		bool collisionHandled = false;
-		{
-			// Convert pixel coordinates to tile indices
-			int left = std::max(0, static_cast<int>(bounds.left / tileSize));
-			int right = std::min(cols - 1, static_cast<int>((bounds.left + bounds.width) / tileSize));
-			int top = std::max(0, static_cast<int>(bounds.top / tileSize));
-			int bottom = std::min(rows - 1, static_cast<int>((bounds.top + bounds.height) / tileSize));
-
-			// Iterate over the tiles in the bounding box of the enemy
-			for (int row = top; row <= bottom && !collisionHandled; ++row) {
-				for (int col = left; col <= right && !collisionHandled; ++col) {
-					auto it = m_board.find({ row, col });
-					if (it != m_board.end()) {
-						Tile* tilePtr = it->second.get();
-						// Check if the tile is a FullTile before handling collision  
-						if (dynamic_cast<FullTile*>(tilePtr) && enemy.getGlobalBounds().intersects(tilePtr->getGlobalBounds())) {
-
-							enemy.handleCollision(*tilePtr);
-							collisionHandled = true;
-						}
-					}
-				}
-			}
-		}
-	}
-}
 
 // Check if the player is on a filled tile and update state accordingly
 void Controller::updatePlayerState()
@@ -578,27 +475,6 @@ bool Controller::regionContainsEnemy(const std::vector<std::pair<int, int>>& reg
 	return false;
 }
 
-void Controller::claimTerritory()
-{
-	// Convert trail to filled tiles (your existing code)
-	const auto& trailTiles = m_player.getTrail().getTiles();
-
-	for (const auto& trailTile : trailTiles) {
-		sf::Vector2f pos = trailTile->getPosition();
-		int row = static_cast<int>(pos.y) / tileSize;
-		int col = static_cast<int>(pos.x) / tileSize;
-		m_board.setTile(row, col, std::make_unique<FullTile>());
-	}
-	m_player.getTrail().clearTrail();
-
-	// Find all empty regions
-	auto regions = findEmptyRegions();
-
-	// Fill regions that don't contain enemies
-	int filledRegions = 0;
-	for (size_t i = 0; i < regions.size(); ++i) {
-		bool hasEnemy = regionContainsEnemy(regions[i]);
-
 void Controller::showLevelCompleteScreen()
 {
 	m_window.clear(sf::Color::Black);
@@ -615,6 +491,7 @@ void Controller::showLevelCompleteScreen()
 	// Pause for 2 seconds
 	sf::sleep(sf::seconds(2));
 }
+
 void Controller::resetGame()
 {
 	m_board.reset();

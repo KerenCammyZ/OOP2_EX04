@@ -40,7 +40,6 @@ public:
     void setTile(int row, int col, std::unique_ptr<Tile> tile);
     Tile* getTileAt(const sf::Vector2f& position) const;
 
-    bool isFilledTile(int row, int col) const;
 
     float getFilledPercentage() const;
     

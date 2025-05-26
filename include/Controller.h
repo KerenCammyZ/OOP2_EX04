@@ -18,7 +18,6 @@ public:
 
    //other methods
    void run();
-   void checkBoundries(GameObject& obj) const;
    void updatePlayerState();
    void handleEvents();
    void update(LevelData& levelData);
@@ -28,9 +27,6 @@ public:
 
    void waitScreen(const std::string& displayMessage);
    void showLevelCompleteScreen();
-   void loadNextLevel(LevelData& levelData);
-   void claimTerritory();
-   void waitForSpace();
    void loadNextLevel(LevelData& levelData);
    void claimTerritory();
    void resetGame();
@@ -54,11 +50,11 @@ private:
    std::vector<std::pair<int, int>> exploreRegion(int startRow, int startCol, std::set<std::pair<int, int>>& visited);
    bool regionContainsEnemy(const std::vector<std::pair<int, int>>& region);
 
-   //int m_lives{3}; // get set from Player
-   //bool m_paused{ false };
    bool m_running{ false };  // defines game state
+   bool m_won{ false };
    int m_score = 0;
-   int m_requiredPercentage{ 50 };  // required to complete level
+   int m_requiredPercentage;  // required to complete level
+   int m_level = 1;
 
    sf::Font m_font;
    sf::Time m_deltaTime;  

@@ -27,7 +27,6 @@ public:
 private:
 	int m_lives;
 	sf::Vector2f m_direction;
-	float m_speed = 300.f;
 
 	Trail m_trail;
 	bool m_OnEmptyTile{ false };

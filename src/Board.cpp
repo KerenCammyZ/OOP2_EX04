@@ -19,7 +19,7 @@ Board::Board(int rows, int cols)
     // Constructor
 }
 
-void Board::initializeBoard(int numOfEnemies)
+void Board::reset()
 {
     int enemyCount = static_cast<int>(m_enemies.size());
     m_enemies.clear();

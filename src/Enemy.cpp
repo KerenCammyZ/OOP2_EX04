@@ -3,7 +3,7 @@
 #include <iostream>
 
 Enemy::Enemy()
-	: m_speed{ 300.f }, m_direction{1,1}
+	: m_direction{1,1}
 {
 	m_shape = std::make_unique<sf::CircleShape>(tileSize / 2.0f);
     m_shape->setFillColor(sf::Color::Red);
@@ -12,7 +12,7 @@ Enemy::Enemy()
 void Enemy::move(sf::Time deltaTime)
 {
 	setOldPosition(m_shape->getPosition());
-	sf::Vector2f newPos = getPosition() + m_direction * m_speed * deltaTime.asSeconds();
+	sf::Vector2f newPos = getPosition() + m_direction * speed * deltaTime.asSeconds();
 	setPosition(newPos);
 	
 }
