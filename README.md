@@ -1,7 +1,7 @@
 # Xonix-style Game – OOP2 Assignment 4
 
 ## Students Details
-Keren Zaig
+Keren Zaig,
 Yissachar Welt
  
 ## General Description
