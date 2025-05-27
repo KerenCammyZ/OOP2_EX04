@@ -1,10 +1,9 @@
 # Xonix-style Game – OOP2 Assignment 4
 
 ## Students Details
-Keren Zaig 329878656
-Yissachar Welt 021891163
+Keren Zaig
+Yissachar Welt
  
-
 ## General Description
 
 This project implements a simplified version of the classic game *Xonix*, built in C++ using object-oriented programming principles and the SFML graphics library. The goal of the game is to claim territory by drawing paths and avoiding enemies.
